@@ -7,6 +7,7 @@
 
 class ResultInfo : public sf::Drawable{
     sf::Text _result_text;
+    sf::RectangleShape _background;
     bool _inited = false;
 public:
     void init(BoardState result, const sf::RenderWindow &window);

@@ -1,7 +1,7 @@
 #include "ResultInfo.h"
 #include "ResourcesManager.h"
 void ResultInfo::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    target.clear(sf::Color(0,0,0,100));
+    target.draw(_background);
     target.draw(_result_text);
 
 }
@@ -14,7 +14,7 @@ void ResultInfo::init(BoardState result, const sf::RenderWindow &window) {
     std::wstring info = (
         result == WIN_1
             ? L"Niestety porażka ;\\"
-            : L"Gratulacje zwycięzco! ;)"
+            : L"Gratulacje mistrzu! ;)"
         );
     _result_text.setFont(*std::static_pointer_cast<sf::Font>(ResourcesManager::singleton().get(Resources::COURGETTE_FONT)));
     _result_text.setString(info);
@@ -24,5 +24,9 @@ void ResultInfo::init(BoardState result, const sf::RenderWindow &window) {
     _result_text.setOrigin(rect.left+ rect.width/2.0, rect.top+rect.height/2.0);
 
     _result_text.setPosition(window.getView().getCenter());
+
+    _background.setSize(window.getView().getSize());
+    _background.setPosition(0,0);
+    _background.setFillColor(sf::Color(0,0,0,170));
 
 }

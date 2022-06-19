@@ -23,13 +23,13 @@ void GameWindow::show(){
             if(checkers_widget->get_status() == IN_PROGRESS)
                 checkers_widget->handle_event(event, _window);
             else
-            result_info.init(checkers_widget->get_status(), _window);
+                result_info.init(checkers_widget->get_status(), _window);
         }
         _window.clear(UIConfig::bg_color);
-        if(checkers_widget->get_status() == IN_PROGRESS)
-            _window.draw(*checkers_widget);
-        else
+        _window.draw(*checkers_widget);
+        if(checkers_widget->get_status() != IN_PROGRESS){
             _window.draw(result_info);
+        }
 
         _window.display();
     }
