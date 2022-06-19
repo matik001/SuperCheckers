@@ -28,9 +28,14 @@ def read_bytes(filename:str):
 def bytes_to_hex_str(bytes):
     return ', '.join('0x%02x' % i for i in bytes)
 
-def filename_to_name(filename:str):
-    res = Path(filename).stem
-    res = res.replace(' ', '_')
+def filename_to_name(filename:str, with_extention):
+    if not with_extention:
+        res = Path(filename).stem
+    else:
+        res = Path(filename).name
+    res = res.replace(' ', '_') \
+             .replace('-', '_') \
+             .replace('.', '_')
     return res.upper()
 
 each_file_scheme = \
@@ -50,7 +55,7 @@ static const unsigned char [NAME][[NAME]_SIZE] = {
 def file_to_code(filename:str) -> str:
     bytes = read_bytes(filename)
     hex_bytes = bytes_to_hex_str(bytes)
-    name = filename_to_name(filename)
+    name = filename_to_name(filename, True)
     res = each_file_scheme\
             .replace('[NAME]', name) \
             .replace('[DATA]', hex_bytes) \
@@ -63,7 +68,7 @@ def files_to_code(files:List[str]) -> str:
 if __name__ == '__main__':
     args = check_args()
     out_filename = args[0]
-    module_name = filename_to_name(out_filename)
+    module_name = filename_to_name(out_filename, True)
     data = files_to_code(args[1:])
     res = out_file_scheme\
             .replace('[MODULE_DEF]', module_name) \

@@ -38,7 +38,7 @@ class CheckersWidget : public sf::Drawable{
 public:
     CheckersWidget(sf::Vector2u size, int computer_level);
     void handle_event(const sf::Event &event, sf::RenderWindow &window);
-
+    BoardState get_status() const;
 
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

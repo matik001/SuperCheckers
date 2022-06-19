@@ -1,5 +1,5 @@
 #include "CheckersWidget.h"
-#include "TexturesManager.h"
+#include "ResourcesManager.h"
 #include "UIConfig.h"
 #include "../utils/SfmlUtils.h"
 
@@ -25,19 +25,19 @@ void CheckersWidget::_update_pieces_sprites() {
     for(int i = 0; i<FIELDS_IN_ROW; i++){
         for(int j = 0; j<FIELDS_IN_COLUMN; j++){
             sf::Vector2f pos = sf::Vector2f(_field_size.x * (i+0.5f), _field_size.y * (j+0.5f));
-            std::shared_ptr<sf::Texture> texture;
+            std::shared_ptr<void> texture;
             auto field = _game->board.get_field(i, j);
             if(field == PAWN1)
-                texture = TexturesManager::singleton().get(Textures::WHITE_PAWN);
+                texture = ResourcesManager::singleton().get(Resources::WHITE_PAWN);
             else if(field == PAWN2)
-                texture = TexturesManager::singleton().get(Textures::BLACK_PAWN);
+                texture = ResourcesManager::singleton().get(Resources::BLACK_PAWN);
             else if(field == QUEEN1)
-                texture = TexturesManager::singleton().get(Textures::WHITE_QUEEN);
+                texture = ResourcesManager::singleton().get(Resources::WHITE_QUEEN);
             else if(field == QUEEN2)
-                texture = TexturesManager::singleton().get(Textures::BLACK_QUEEN);
+                texture = ResourcesManager::singleton().get(Resources::BLACK_QUEEN);
             else
                 continue;
-            _pieces_sprites[i][j].setTexture(*texture);
+            _pieces_sprites[i][j].setTexture(*std::static_pointer_cast<sf::Texture>(texture));
             scale_to_size(_pieces_sprites[i][j], _field_size.x-10, _field_size.y-10);
             _pieces_sprites[i][j].setOrigin(_pieces_sprites[i][j].getTextureRect().width/2.0, _pieces_sprites[i][j].getTextureRect().height/2.0);
             _pieces_sprites[i][j].setPosition(pos);
@@ -147,12 +147,14 @@ void CheckersWidget::handle_event(const sf::Event &event, sf::RenderWindow &wind
             _selected_field = std::nullopt;
 
         if(pos.has_value()){
-            auto played_move = std::find_if(_possible_moves.begin(), _possible_moves.end(),
-                       [pos](const Move &move){return move.to.x == pos->x && move.to.y == pos->y;});
-            if(played_move != _possible_moves.end()){
-                _user_agent->set_move(*played_move);
+            auto considered_move = std::find_if(_possible_moves.begin(), _possible_moves.end(),
+                                                [pos](const Move &move){return move.to.x == pos->x && move.to.y == pos->y;});
+            if(considered_move != _possible_moves.end()){
+                _user_agent->set_move(*considered_move);
 
                 _game->play_next_move();
+                if(!_game->board.get_color_on_move())
+                    _selected_field = sf::Vector2u(considered_move->to.x, considered_move->to.y);
                 while(_game->board.get_color_on_move())
                     _game->play_next_move();
             }
@@ -170,6 +172,10 @@ std::optional<sf::Vector2u> CheckersWidget::_map_pos_to_field(sf::Vector2f pos) 
     if(res.x < 0 || res.x >= 8 || res.y < 0 || res.y >= 8)
         return std::nullopt;
     return res;
+}
+
+BoardState CheckersWidget::get_status() const {
+    return _game->get_state();
 }
 
 

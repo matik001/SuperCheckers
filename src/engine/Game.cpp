@@ -11,13 +11,18 @@ BoardState Game::play_next_move() {
     Agent *agent = (board.get_color_on_move() ? agent1 : agent2);
     Move move = agent->get_move();
     board.play_move(move);
-    return board.get_state(board.get_all_possible_moves());
+    _state = board.get_state(board.get_all_possible_moves());
+    return _state;
 }
 
 bool Game::is_finished() const {
-    return board.get_state(board.get_all_possible_moves()) != IN_PROGRESS;
+    return _state != IN_PROGRESS;
 }
 
 Game::Game() {
 
+}
+
+BoardState Game::get_state() const {
+    return _state;
 }

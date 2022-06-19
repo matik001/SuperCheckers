@@ -1,0 +1,1 @@
+python ./scripts/BinToC.py ./src/utils/FontResources.h ((dir  -Path ./fonts/*).fullname)
