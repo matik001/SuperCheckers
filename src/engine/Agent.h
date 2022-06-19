@@ -31,7 +31,7 @@ public:
     void init(Board *board, bool color) override;
 };
 
-class UserAgent : public Agent{
+class UserConsoleAgent : public Agent{
     void _print_moves(DynamicArray<Move> &moves);
     Move _pick_move(DynamicArray<Move> &moves);
 public:

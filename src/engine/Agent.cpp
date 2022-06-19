@@ -75,24 +75,24 @@ int MinMaxAgent::_evaluate_board(const DynamicArray<Move> &possible_moves) {
            - (board->get_amount_of_queens(false) * 3 + board->get_amount_of_pawns(false));
 }
 
-void UserAgent::init(Board *board, bool color) {
+void UserConsoleAgent::init(Board *board, bool color) {
     Agent::init(board, color);
 }
 
-Move UserAgent::get_move() {
+Move UserConsoleAgent::get_move() {
     auto moves = board->get_all_possible_moves();
     Move move = _pick_move(moves);
     return move;
 }
 
-void UserAgent::_print_moves(DynamicArray<Move> &moves) {
+void UserConsoleAgent::_print_moves(DynamicArray<Move> &moves) {
     std::cout << "(GRACZ " << 2 - (int) color << ") Mozliwe ruchy:" << std::endl;
     for (int i = 0; i < moves.size(); i++) {
         std::cout << i + 1 << ") " << moves[i] << std::endl;
     }
 }
 
-Move UserAgent::_pick_move(DynamicArray<Move> &moves) {
+Move UserConsoleAgent::_pick_move(DynamicArray<Move> &moves) {
     _print_moves(moves);
     std::cout << "Podaj numer ruchu\n>";
     while (true) {

@@ -1,16 +1,18 @@
 #include <iostream>
 #include "engine/Game.h"
 #include "ui/GameWindow.h"
+#include "ui/TexturesManager.h"
 
 int main() {
+    TexturesManager::singleton().load_all();
     GameWindow window;
     window.show();
-    /// mozna zmienic Agenta na innego np. z UserAgent na MinMaxAgent aby grały dwa boty lub odwrotnie aby grali ludzie
+    /// mozna zmienic Agenta na innego np. z UserConsoleAgent na MinMaxAgent aby grały dwa boty lub odwrotnie aby grali ludzie
 //    MinMaxAgent player1(8); /// im wieksza glebokosc tym dluzej mysli (szczegolnie gdy pojawiaja sie damki ktore maja duzo ruchow)
 //    MinMaxAgent player2(4);
 //    aby gral czlowiek z komputerem
-    UserAgent player1; /// ja z poziom 5 już nie mam szans
-    UserAgent player2;
+    UserConsoleAgent player1; /// ja z poziom 5 już nie mam szans
+    UserConsoleAgent player2;
     Game game(&player1, &player2, false); /// pierwszy gracz to ten na gorze
 
     while(!game.is_finished()){

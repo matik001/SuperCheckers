@@ -44,16 +44,16 @@ class Board {
     void _reset_board(bool is_player1_on_move); /// ustawia board do początkowej pozycji
 public:
     Board(bool is_player1_on_move = false);
-    DynamicArray<Move> get_all_possible_moves() const; /// zwraca wszystkie mozliwe ruchy gracza aktualnie na ruchu, wliczajac bicia
+    [[nodiscard]] DynamicArray<Move> get_all_possible_moves() const; /// zwraca wszystkie mozliwe ruchy gracza aktualnie na ruchu, wliczajac bicia
     void play_move(Move move); /// jezeli chcemy wykonac np. podwojne bicie to wykonujemy te funkcje 2 razy, kolor sie wtedy nie zmienia
     void revert_move(); /// cofa ostatnio zagrany ruch
     void print() const; /// rysuje plansze
-    bool get_color_on_move() const; /// zwracza czy gracz 1 jest na ruchu
-    int get_amount_of_pieces(bool player) const; /// zwraca ilosc bierek danego gracza  (pieces = pawns + queens)
-    int get_amount_of_pawns(bool player) const; /// zwraca pionkow
-    int get_amount_of_queens(bool player) const; /// zwraca krolowek
-
-    BoardState get_state(const DynamicArray<Move> &all_possible_moves) const;
+    [[nodiscard]] bool get_color_on_move() const; /// zwracza czy gracz 1 jest na ruchu
+    [[nodiscard]] int get_amount_of_pieces(bool player) const; /// zwraca ilosc bierek danego gracza  (pieces = pawns + queens)
+    [[nodiscard]] int get_amount_of_pawns(bool player) const; /// zwraca pionkow
+    [[nodiscard]] int get_amount_of_queens(bool player) const; /// zwraca krolowek
+    [[nodiscard]] const BoardField  get_field(int x, int y) const;
+    [[nodiscard]] BoardState get_state(const DynamicArray<Move> &all_possible_moves) const;
 };
 
 

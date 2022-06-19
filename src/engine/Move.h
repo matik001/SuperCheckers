@@ -6,6 +6,7 @@ struct Position{
     int x, y;
     Position();
     Position(int x, int y);
+    bool operator==(const Position &pos) const;
 };
 std::ostream& operator<<(std::ostream& os, Position const& pos);
 
@@ -20,9 +21,12 @@ struct Move{
     bool was_beaten_queen; /// czy zbity pionek byl krolową
     int capture_number; /// ktore z kolei bicie tą figurą w tej turze (numeracja od 1)
     Move();
+    Move(const Move &move);
     Move(Position from, Position to, bool player1, bool pawn_promoted);
     Move(Position from, Position to, bool player1, bool pawn_promoted, Position pos_beated, bool was_beated_queen,
          int capture_number);
+    Move& operator=(const Move& m);
+    bool operator==(const Move& m) const;
 };
 std::ostream& operator<<(std::ostream& os, Move const& move);
 

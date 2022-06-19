@@ -338,3 +338,9 @@ BoardState Board::get_state(const DynamicArray<Move> &all_possible_moves) const 
 }
 
 
+const BoardField Board::get_field(int x, int y) const {
+    return _board_table[x][y];
+}
+
+
+

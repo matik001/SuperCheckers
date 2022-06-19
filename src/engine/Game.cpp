@@ -17,3 +17,7 @@ BoardState Game::play_next_move() {
 bool Game::is_finished() const {
     return board.get_state(board.get_all_possible_moves()) != IN_PROGRESS;
 }
+
+Game::Game() {
+
+}
