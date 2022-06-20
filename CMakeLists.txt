@@ -1,13 +1,20 @@
 cmake_minimum_required(VERSION 3.21)
 project(CheckersAI)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lstdc++fs")
 
+# sfml
 set(SFML_STATIC_LIBRARIES TRUE)
 set(SFML_DIR "C:/SFML/lib/cmake/SFML")
-
 find_package(SFML 2.5.1 COMPONENTS graphics window system network audio REQUIRED)
 
-file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_SOURCE_DIR} "./src/*.cpp")
-add_executable(CheckersAI ${SOURCE_FILES} src/ui/CheckersWidget.cpp src/ui/CheckersWidget.h src/ui/ResourcesManager.cpp src/ui/ResourcesManager.h src/utils/TextureResources.h src/ui/UIConfig.h src/ui/UIConfig.cpp src/ui/UserUIAgent.h src/ui/UserUIAgent.cpp src/utils/SfmlUtils.h src/ui/ResultInfo.cpp src/ui/ResultInfo.h)
+# tgui
+set(TGUI_BACKEND "SFML_GRAPHICS")
+set(CMAKE_BUILD_TYPE "Debug")
+set(TGUI_CXX_STANDARD, "17")
+set(TGUI_STATIC_LIBRARIES TRUE)
+set(TGUI_DIR "C:/TGUI/lib/cmake/TGUI")
+find_package(TGUI 0.10 REQUIRED)
 
-target_link_libraries(CheckersAI sfml-graphics sfml-window sfml-system sfml-network sfml-audio)
+file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_SOURCE_DIR} "./src/*.cpp")
+add_executable(CheckersAI ${SOURCE_FILES})
+target_link_libraries(CheckersAI PRIVATE TGUI::TGUI sfml-graphics sfml-window sfml-system sfml-network sfml-audio stdc++fs)

@@ -1,7 +1,7 @@
 #ifndef CHECKERSAI_CONFIG_H
 #define CHECKERSAI_CONFIG_H
 
-#include <SFML/Graphics/Color.hpp>
+#include <TGUI/Backend/SFML-Graphics.hpp>
 
 class UIConfig{
 public:

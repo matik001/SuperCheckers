@@ -1,7 +1,8 @@
 #include <iostream>
 #include "engine/Game.h"
-#include "ui/GameWindow.h"
+#include "ui/GameWindow/GameWindow.h"
 #include "ui/ResourcesManager.h"
+#include "utils/SfmlUtils.h"
 
 int main() {
     ResourcesManager::singleton().load_all();

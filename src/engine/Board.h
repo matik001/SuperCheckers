@@ -16,7 +16,7 @@ bool get_board_field_color(BoardField boardField);
 bool is_board_field_queen(BoardField boardField);
 BoardField create_board_field(bool color, bool is_queen);
 
-enum BoardState{
+enum BoardStatus{
     WIN_1, WIN_2, IN_PROGRESS
 };
 
@@ -48,12 +48,13 @@ public:
     void play_move(Move move); /// jezeli chcemy wykonac np. podwojne bicie to wykonujemy te funkcje 2 razy, kolor sie wtedy nie zmienia
     void revert_move(); /// cofa ostatnio zagrany ruch
     void print() const; /// rysuje plansze
-    [[nodiscard]] bool get_color_on_move() const; /// zwracza czy gracz 1 jest na ruchu
+    [[nodiscard]] bool get_player_on_move() const; /// zwracza czy gracz 1 jest na ruchu
     [[nodiscard]] int get_amount_of_pieces(bool player) const; /// zwraca ilosc bierek danego gracza  (pieces = pawns + queens)
     [[nodiscard]] int get_amount_of_pawns(bool player) const; /// zwraca pionkow
     [[nodiscard]] int get_amount_of_queens(bool player) const; /// zwraca krolowek
     [[nodiscard]] const BoardField  get_field(int x, int y) const;
-    [[nodiscard]] BoardState get_state(const DynamicArray<Move> &all_possible_moves) const;
+    [[nodiscard]] BoardStatus get_state(const DynamicArray<Move> &all_possible_moves) const;
+    Move get_last_move(); /// zakladamy ze ten ruch istnieje
 };
 
 

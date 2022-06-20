@@ -2,7 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include "Board.h"
-#include "Helpers.h"
+#include "../utils/Helpers.h"
 
 
 char board_field_to_char(BoardField boardField) {
@@ -66,7 +66,7 @@ void Board::print() const {
     }
     std::cout << "pawns1: " << get_amount_of_pawns(true) << " " << "queens1: " << get_amount_of_queens(true)
             << std::endl << "pawns2: " << get_amount_of_pawns(false) << " " << "queens2: " << get_amount_of_queens(false) << std::endl<< std::endl;
-    std::cout << "GRACZ " <<  2 - get_color_on_move()  << " na ruchu" << std::endl;
+    std::cout << "GRACZ " << 2 - get_player_on_move() << " na ruchu" << std::endl;
 
     std::cout << std::flush;
 }
@@ -198,7 +198,7 @@ DynamicArray<Move> Board::_get_queen_beats(Position from, bool color) const {
 }
 
 DynamicArray<Move> Board::_get_moves(Position from) const {
-    bool color = get_color_on_move();
+    bool color = get_player_on_move();
     if(_board_table[from.x][from.y] != NOTHING
             && get_board_field_color(_board_table[from.x][from.y]) == color){
         if(is_board_field_queen(_board_table[from.x][from.y]))
@@ -209,7 +209,7 @@ DynamicArray<Move> Board::_get_moves(Position from) const {
 }
 
 DynamicArray<Move> Board::_get_beats(Position from) const {
-    bool color = get_color_on_move();
+    bool color = get_player_on_move();
     if(_board_table[from.x][from.y] != NOTHING
        && get_board_field_color(_board_table[from.x][from.y]) == color){
         if(is_board_field_queen(_board_table[from.x][from.y]))
@@ -240,7 +240,7 @@ DynamicArray<Move> Board::get_all_possible_moves() const {
     return normal_moves;
 }
 
-bool Board::get_color_on_move() const {
+bool Board::get_player_on_move() const {
     return _is_player1_on_move;
 }
 
@@ -289,12 +289,12 @@ void Board::revert_move() {
     }
 
 
-    swap(_board_table[move.from.x][move.from.y], _board_table[move.to.x][move.to.y]);
+    std::swap(_board_table[move.from.x][move.from.y], _board_table[move.to.x][move.to.y]);
 }
 
 
 void Board::play_move(Move move) {
-    swap(_board_table[move.to.x][move.to.y], _board_table[move.from.x][move.from.y]);
+    std::swap(_board_table[move.to.x][move.to.y], _board_table[move.from.x][move.from.y]);
 
     bool has_next_beat = false;
     if(!move.is_beating){
@@ -327,19 +327,23 @@ void Board::play_move(Move move) {
     _moves_history.push(move);
 }
 
-BoardState Board::get_state(const DynamicArray<Move> &all_possible_moves) const {
+BoardStatus Board::get_state(const DynamicArray<Move> &all_possible_moves) const {
     if (get_amount_of_pieces(true) == 0)
         return WIN_2;
     if (get_amount_of_pieces(false) == 0)
         return WIN_1;
     if (all_possible_moves.size() == 0)
-        return (get_color_on_move() ? WIN_2 : WIN_1);
+        return (get_player_on_move() ? WIN_2 : WIN_1);
     return IN_PROGRESS;
 }
 
 
 const BoardField Board::get_field(int x, int y) const {
     return _board_table[x][y];
+}
+
+Move Board::get_last_move() {
+    return _moves_history[_moves_history.size()-1];
 }
 
 

@@ -1,7 +1,7 @@
 
 #include "Agent.h"
-#include "Helpers.h"
-
+#include "../utils/Helpers.h"
+#include <algorithm>
 void Agent::init(Board *board, bool color) {
     this->board = board;
     this->color = color;
@@ -34,7 +34,7 @@ MinMaxRes MinMaxAgent::_minmax(int depth, int alpha, int beta) {
         return MinMaxRes(_evaluate_board(moves), -1);
     }
 
-    bool player1 = board->get_color_on_move();
+    bool player1 = board->get_player_on_move();
 
     MinMaxRes best(-1, -1);
     for (int i = 0; i<moves.size() && alpha < beta; i++) {
@@ -51,14 +51,14 @@ MinMaxRes MinMaxAgent::_minmax(int depth, int alpha, int beta) {
                 best.eval = resi.eval;
                 best.best_move_id = i;
             }
-            alpha = max(alpha, resi.eval);
+            alpha = std::max(alpha, resi.eval);
         }
         else{
             if(resi.eval < best.eval){
                 best.eval = resi.eval;
                 best.best_move_id = i;
             }
-            beta = min(beta, resi.eval);
+            beta = std::min(beta, resi.eval);
         }
         board->revert_move();
     }
