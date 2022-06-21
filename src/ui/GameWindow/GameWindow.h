@@ -10,7 +10,7 @@
 class WindowState;
 
 class GameWindow{
-    sf::RenderWindow _window;
+    std::shared_ptr<sf::RenderWindow> _window;
     tgui::Gui _gui;
     std::shared_ptr<WindowState> _current_state;
 public:

@@ -11,21 +11,22 @@ GameWindow::GameWindow(){
 
 void GameWindow::show(){
 
-    _window.create(sf::VideoMode(700, 600), "SuperCheckers by Mateusz Kisiel",
+    _window = std::make_shared<sf::RenderWindow>();
+    _window->create(sf::VideoMode(700, 600), "SuperCheckers by Mateusz Kisiel",
                     sf::Style::Titlebar | sf::Style::Close, sf::ContextSettings(0,0, 16));
-    _window.setFramerateLimit(60);
-    _gui.setWindow(_window);
+    _window->setFramerateLimit(60);
+    _gui.setWindow(*_window);
 
     change_state(std::make_shared<MenuWindowState>());
 
-    while (_window.isOpen())
+    while (_window->isOpen())
     {
         sf::Event event;
-        while (_window.pollEvent(event))
+        while (_window->pollEvent(event))
         {
             _gui.handleEvent(event);
             if (event.type == sf::Event::Closed)
-                _window.close();
+                _window->close();
 
             _current_state->handle_event(event);
         }
@@ -33,7 +34,7 @@ void GameWindow::show(){
 
         _current_state->draw();
         _gui.draw();
-        _window.display();
+        _window->display();
     }
 }
 

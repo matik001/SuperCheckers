@@ -1,6 +1,7 @@
 #ifndef CHECKERSAI_DYNAMICARRAY_H
 #define CHECKERSAI_DYNAMICARRAY_H
 
+/// hobbistycznie zrobiona implementacja vector'a z stla
 template <typename T>
 class DynamicArray {
     T* t = nullptr;

@@ -11,6 +11,8 @@ public:
     static const sf::Color hover_piece_color;
     static const sf::Color selected_piece_color;
     static const sf::Color possible_move_color;
+
+    static const sf::Time move_animation_time;
 };
 
 #endif //CHECKERSAI_CONFIG_H

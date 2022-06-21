@@ -24,17 +24,17 @@ void ResultWindowState::init(GameWindow &window) {
     auto rect = _result_text.getLocalBounds();
     _result_text.setOrigin(rect.left+ rect.width/2.0, rect.top+rect.height/2.0);
 
-    _result_text.setPosition(_window->_window.getView().getCenter());
+    _result_text.setPosition(_window->_window->getView().getCenter());
 
-    _background_dim.setSize(_window->_window.getView().getSize());
+    _background_dim.setSize(_window->_window->getView().getSize());
     _background_dim.setPosition(0, 0);
     _background_dim.setFillColor(sf::Color(0, 0, 0, 170));
 }
 void ResultWindowState::draw() {
-    _window->_window.clear(UIConfig::bg_color);
-    _window->_window.draw(*_background_sprite);
-    _window->_window.draw(_background_dim);
-    _window->_window.draw(_result_text);
+    _window->_window->clear(UIConfig::bg_color);
+    _window->_window->draw(*_background_sprite);
+    _window->_window->draw(_background_dim);
+    _window->_window->draw(_result_text);
 }
 
 void ResultWindowState::handle_event(const sf::Event &event) {

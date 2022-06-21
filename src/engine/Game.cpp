@@ -26,3 +26,7 @@ Game::Game() {
 BoardStatus Game::get_state() const {
     return _state;
 }
+
+void Game::revert_move() {
+    board.revert_move();
+}

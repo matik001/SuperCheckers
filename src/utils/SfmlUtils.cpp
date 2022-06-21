@@ -10,12 +10,14 @@ void scale_to_size(sf::Sprite &sprite, float width, float height){
 }
 
 std::shared_ptr<sf::Texture> get_screenshot(sf::RenderTarget &renderer,
-                                            std::function<void(sf::RenderTarget &, sf::RenderStates)> draw) {
+                                            const std::function<void(sf::RenderTarget &renderer, sf::RenderStates)>& draw) {
+
     sf::RenderTexture render_texture;
     render_texture.create(renderer.getView().getSize().x, renderer.getView().getSize().y);
-    draw(renderer, sf::RenderStates::Default);
+    draw(render_texture, sf::RenderStates::Default);
     render_texture.display();
-    std::shared_ptr<sf::Texture> res = std::make_shared<sf::Texture>(render_texture.getTexture());
+    auto texture = std::make_shared<sf::Texture>(render_texture.getTexture());
 
-    return res;
+
+    return std::move(texture);
 }

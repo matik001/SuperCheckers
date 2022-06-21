@@ -1,10 +1,12 @@
 #include "CheckersWidget.h"
+
+#include <utility>
 #include "ResourcesManager.h"
 #include "UIConfig.h"
 #include "../utils/SfmlUtils.h"
-
-CheckersWidget::CheckersWidget(sf::Vector2<float> size, int computer_level, bool are_we_white)
-        : _are_we_white(are_we_white) {
+CheckersWidget::CheckersWidget(sf::Vector2<float> size, int computer_level
+                               , bool are_we_white, std::shared_ptr<sf::RenderWindow> window)
+        : _are_we_white(are_we_white), _window(std::move(window)) {
     this->_size = size;
     _field_size = sf::Vector2f(_size.x / (float)FIELDS_IN_ROW, _size.y / (float)FIELDS_IN_COLUMN);
 
@@ -21,7 +23,7 @@ void CheckersWidget::draw(sf::RenderTarget &target, sf::RenderStates states) con
     _draw_pieces(target, states);
 }
 
-Resource CheckersWidget::_board_field_to_texture_id(BoardField field){
+Resource CheckersWidget::_board_field_to_texture_id(BoardField field) const{
     auto queen1 = Resource::WHITE_QUEEN;
     auto queen2 = Resource::BLACK_QUEEN;
     auto pawn1 = Resource::WHITE_PAWN;
@@ -46,21 +48,29 @@ Resource CheckersWidget::_board_field_to_texture_id(BoardField field){
 }
 
 void CheckersWidget::_update_pieces_sprites() {
-    for(int i = 0; i<FIELDS_IN_ROW; i++){
-        for(int j = 0; j<FIELDS_IN_COLUMN; j++){
-            sf::Vector2f pos = _map_field_to_pos(sf::Vector2u(i, j));
-            std::shared_ptr<void> texture;
+    _pieces.erase(std::remove_if(_pieces.begin(), _pieces.end(),
+                                 [this](const std::shared_ptr<Piece> &piece){
+        auto field = _game->board.get_field(piece->pos.x, piece->pos.y);
+        return field == NOTHING;
+    }), _pieces.end());
+
+    for(int i = 0; i<FIELDS_IN_COLUMN; i++){
+        for(int j = 0; j<FIELDS_IN_ROW; j++){
             auto field = _game->board.get_field(i, j);
             if(field == NOTHING)
                 continue;
+            auto piece = _find_piece_or_create(sf::Vector2u(i, j));
+            sf::Vector2f pos = _map_field_to_pos(piece->pos);
+            std::shared_ptr<void> texture;
 
             Resource resource_id = _board_field_to_texture_id(field);
             texture = ResourcesManager::singleton().get(resource_id);
 
-            _pieces_sprites[i][j].setTexture(*std::static_pointer_cast<sf::Texture>(texture));
-            scale_to_size(_pieces_sprites[i][j], _field_size.x-10, _field_size.y-10);
-            _pieces_sprites[i][j].setOrigin(_pieces_sprites[i][j].getTextureRect().width/2.0, _pieces_sprites[i][j].getTextureRect().height/2.0);
-            _pieces_sprites[i][j].setPosition(pos);
+            piece->sprite.setTexture(*std::static_pointer_cast<sf::Texture>(texture));
+            scale_to_size(piece->sprite, _field_size.x-10, _field_size.y-10);
+            piece->sprite.setOrigin(piece->sprite.getTextureRect().width/2.0,
+                                    piece->sprite.getTextureRect().height/2.0);
+            piece->sprite.setPosition(pos);
         }
     }
 }
@@ -94,7 +104,7 @@ void CheckersWidget::_update_field_sprites() {
     }
 }
 
-void CheckersWidget::_update_cursor(sf::RenderWindow &window) {
+void CheckersWidget::_update_cursor() {
     sf::Cursor cursor;
     cursor.loadFromSystem(sf::Cursor::Arrow);
     if(_hovered_field != std::nullopt && !_game->board.get_player_on_move()){
@@ -108,7 +118,7 @@ void CheckersWidget::_update_cursor(sf::RenderWindow &window) {
                     [this](const Move &move){return move.to.x == _hovered_field->x && move.to.y == _hovered_field->y;}))
             cursor.loadFromSystem(sf::Cursor::Hand);
     }
-    window.setMouseCursor(cursor);
+    _window->setMouseCursor(cursor);
 }
 
 void CheckersWidget::_update_possible_moves() {
@@ -135,35 +145,60 @@ void CheckersWidget::_draw_board(sf::RenderTarget &target, sf::RenderStates stat
 }
 
 void CheckersWidget::_draw_pieces(sf::RenderTarget &target, sf::RenderStates states) const {
-    for(int i = 0; i<FIELDS_IN_ROW; i++){
-        for(int j = 0; j<FIELDS_IN_COLUMN; j++){
-            if(_game->board.get_field(i, j) != NOTHING)
-                target.draw(_pieces_sprites[i][j]);
-        }
+    for (auto &piece: _pieces) {
+        target.draw(piece->sprite);
     }
 }
-void CheckersWidget::_play_next_move() {
-    _game->play_next_move();
+void CheckersWidget::_play_next_move(const std::function<void()>& callback) {
+    _game->play_next_move(); /// problem ze po zagraniu ruchu od razu sie zmienia gracz na ruchu, ale w sumie to _is_move_animation_now ratuje
     auto played_move = _game->board.get_last_move();
+
     auto from = _map_field_to_pos(sf::Vector2u(played_move.from.x, played_move.from.y));
     auto to = _map_field_to_pos(sf::Vector2u(played_move.to.x, played_move.to.y));
-    _move_animation = std::make_shared<MoveAnimation>(
+    auto piece = _find_piece(sf::Vector2u(played_move.from.x, played_move.from.y));
+    piece->pos = sf::Vector2u(played_move.to.x, played_move.to.y);
+
+    auto animation = std::make_shared<MoveAnimation>(
                 from,
                 to,
-              sf::milliseconds(1000),
-              std::shared_ptr<sf::Transformable>(&_pieces_sprites[played_move.from.x][played_move.from.y]));
-    _move_animation->start();
+              UIConfig::move_animation_time,
+              &piece->sprite);
+    _move_animation = animation; /// musi byc w ten sposob, bo inaczej wykona sie destruktor, przy kolejnej animacji, w callbacku obecnej
 
+    _selected_field = std::nullopt;
+    _update_possible_moves();
+    animation->start([this, callback, animation]{ /// trzeba wrzucic animation, z powyzszego powodu
+        _update_field_sprites();
+        _update_pieces_sprites();
+        _update_cursor();
+        callback();
+    });
+}
 
-//    _update_possible_moves();
-    _update_field_sprites();
-    _update_pieces_sprites();
-//    _update_cursor(window);
+void CheckersWidget::_play_user_move(const Move& move) {
+    _user_agent->set_move(move);
+    _play_next_move([this, move]{
+        if(!_game->board.get_player_on_move() && _game->get_state() == IN_PROGRESS){
+            _selected_field = sf::Vector2u(move.to.x, move.to.y);
+            _update_possible_moves();
+            _update_field_sprites();
+            _update_pieces_sprites();
+            _update_cursor();
+        }
+        else
+            _play_enemy_moves();
+    });
+}
+
+void CheckersWidget::_play_enemy_moves() {
+    if(_game->board.get_player_on_move() && _game->get_state() == IN_PROGRESS)
+        _play_next_move([this]{
+            _play_enemy_moves();
+        });
 }
 
 
-
-void CheckersWidget::handle_event(const sf::Event &event, sf::RenderWindow &window) {
+void CheckersWidget::handle_event(const sf::Event &event) {
     if(_game->get_state() != IN_PROGRESS)
         return;
     if(event.type == sf::Event::MouseMoved){
@@ -171,23 +206,23 @@ void CheckersWidget::handle_event(const sf::Event &event, sf::RenderWindow &wind
             return;
 
         auto pos = _map_pos_to_field(
-                window.mapPixelToCoords(
+                _window->mapPixelToCoords(
                 sf::Vector2i(event.mouseMove.x, event.mouseMove.y)));
         _hovered_field = pos;
         _update_field_sprites();
-        _update_cursor(window);
+        _update_cursor();
     }
     if(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         if(_game->board.get_player_on_move() || _is_move_animation_now())
             return;
 
         auto pos = _map_pos_to_field(
-                window.mapPixelToCoords(
+                _window->mapPixelToCoords(
                         sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
         _hovered_field = std::nullopt;
         BoardField field = _game->board.get_field(pos->x, pos->y);
-        if(field != NOTHING && !get_board_field_color(field)){
-            if(_selected_field == pos)
+        if(field != NOTHING && !get_board_field_color(field)){ /// kliknieto na nasza figure
+            if(_selected_field == pos) /// odznaczamy gdy kliknieto na obecnie zaznaczona
                 _selected_field = std::nullopt;
             else
                 _selected_field = pos;
@@ -195,24 +230,21 @@ void CheckersWidget::handle_event(const sf::Event &event, sf::RenderWindow &wind
         else
             _selected_field = std::nullopt;
 
+
+
         if(pos.has_value()){
             auto considered_move = std::find_if(_possible_moves.begin(), _possible_moves.end(),
                                                 [pos](const Move &move){return move.to.x == pos->x && move.to.y == pos->y;});
             if(considered_move != _possible_moves.end()){
-                _user_agent->set_move(*considered_move);
-
-                _game->play_next_move();
-                if(!_game->board.get_player_on_move() && _game->get_state() == IN_PROGRESS)
-                    _selected_field = sf::Vector2u(considered_move->to.x, considered_move->to.y);
-                while(_game->board.get_player_on_move() && _game->get_state() == IN_PROGRESS)
-                    _game->play_next_move();
+                _play_user_move(*considered_move);
+                return;
             }
         }
+
         _update_possible_moves();
         _update_field_sprites();
         _update_pieces_sprites();
-        _update_cursor(window);
-
+        _update_cursor();
     }
 }
 
@@ -240,6 +272,29 @@ void CheckersWidget::update() {
 bool CheckersWidget::_is_move_animation_now() const {
     return _move_animation && _move_animation->is_working();
 }
+
+std::shared_ptr<Piece> CheckersWidget::_find_piece(sf::Vector2u pos) const {
+    auto res = std::find_if(_pieces.begin(), _pieces.end(),[pos](const std::shared_ptr<Piece> &p){
+        return p->pos == pos;
+    });
+    if(res == _pieces.end())
+        return nullptr;
+    return *res;
+}
+
+std::shared_ptr<Piece> CheckersWidget::_find_piece_or_create(sf::Vector2u pos)  {
+    auto res = _find_piece(pos);
+    if(res != nullptr)
+        return res;
+    _pieces.push_back(std::make_shared<Piece>(pos));
+    return _pieces.back();
+}
+
+bool CheckersWidget::is_finished() const {
+    return _game->is_finished() && !_is_move_animation_now();
+}
+
+
 
 
 

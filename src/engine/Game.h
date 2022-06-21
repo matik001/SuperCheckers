@@ -14,6 +14,7 @@ public:
     Game();
     Game(Agent *agent1, Agent *agent2, bool is_player1_starting);
     BoardStatus play_next_move(); /// zwraca informacje o stanie gry
+    void revert_move();
     bool is_finished() const;
     BoardStatus get_state() const;
 };

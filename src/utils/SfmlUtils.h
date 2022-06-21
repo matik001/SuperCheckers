@@ -6,5 +6,5 @@
 
 void scale_to_size(sf::Sprite &sprite, float width, float height);
 std::shared_ptr<sf::Texture> get_screenshot(sf::RenderTarget &renderer,
-                                            std::function<void(sf::RenderTarget &, sf::RenderStates)> draw);
+                                            const std::function<void(sf::RenderTarget &, sf::RenderStates)>& draw);
 #endif //CHECKERSAI_SFMLUTILS_H
