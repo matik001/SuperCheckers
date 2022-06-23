@@ -9,7 +9,7 @@
 #include "../engine/Game.h"
 #include "UserUIAgent.h"
 #include "ResourcesManager.h"
-#include "MoveAnimation.h"
+#include "Animation/MoveAnimation.h"
 #include "../utils/Dispatcher.h"
 
 #define FIELDS_IN_ROW  8

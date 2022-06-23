@@ -13,6 +13,9 @@ public:
     static const sf::Color possible_move_color;
 
     static const sf::Time move_animation_time;
+    static const sf::Time background_dim_time;
+    static const sf::Color background_dim_color;
+    static const sf::Time result_text_show_time;
 };
 
 #endif //CHECKERSAI_CONFIG_H

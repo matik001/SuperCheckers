@@ -159,9 +159,9 @@ void CheckersWidget::_play_next_move(const std::function<void()>& callback) {
             piece->pos = sf::Vector2u(move.to.x, move.to.y);
 
             auto animation = std::make_shared<MoveAnimation>(
+                    UIConfig::move_animation_time,
                     from,
                     to,
-                    UIConfig::move_animation_time,
                     &piece->sprite);
             _move_animation = animation; /// musi byc w ten sposob, bo inaczej wykona sie destruktor, przy kolejnej animacji, w callbacku obecnej
 
@@ -257,7 +257,7 @@ std::optional<sf::Vector2u> CheckersWidget::_map_pos_to_field(sf::Vector2f pos) 
     return res;
 }
 sf::Vector2f CheckersWidget::_map_field_to_pos(sf::Vector2u pos) const {
-    return sf::Vector2f(_field_size.x * (pos.x+0.5f), _field_size.y * (pos.y+0.5f));
+    return {_field_size.x * (pos.x+0.5f), _field_size.y * (pos.y+0.5f)};
 }
 
 
