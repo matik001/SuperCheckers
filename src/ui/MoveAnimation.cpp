@@ -15,7 +15,7 @@ sf::Vector2f MoveAnimation::_calc_pos() const {
 }
 
 void MoveAnimation::_update_is_working() {
-    if(_clock.getElapsedTime().asMilliseconds() > _time.asMilliseconds()){
+    if(_is_working && _clock.getElapsedTime().asMilliseconds() > _time.asMilliseconds()){
         _is_working = false;
         _object->setPosition(_to);
         _callback();

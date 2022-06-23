@@ -16,7 +16,7 @@ void MenuWindowState::init(GameWindow &window) {
     _handle_changed_difficulty();
     _new_game_btn->onClick([this]{ _handle_new_game();});
     _load_game_btn->onClick([this]{ _handle_load_game();});
-    _difficulty_slider->onValueChange([this]{_handle_changed_difficulty();});
+    _difficulty_slider->onValueChange([this]{_handle_changed_difficulty() ;});
 }
 
 

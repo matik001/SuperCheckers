@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 project(CheckersAI)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lstdc++fs")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread -lpthread -Wl,--no-as-needed -lstdc++fs")
 
 # sfml
 set(SFML_STATIC_LIBRARIES TRUE)

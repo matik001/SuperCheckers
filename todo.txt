@@ -1,14 +1,16 @@
 - podświetlenie tylko jak się najedzie na możliwą do ruchu figurą ?
-- gdy przymus bicia pionek w czerwonym kolorze
+- gdy przymus bicia pionek w czerwonym kolorze ?
 - możliwość cofnięcia ruchu
-- powolne przyciemnienie planszy i napis wyniku, tylko przyciemnienie
+- powolne przyciemnienie planszy i napis wyniku, tylko przyciemnienie ?
 - numerowanie szachownicy
 - Ikonka
-- wielowatkowosc
 - przycisk offer draw?, - pusczeenie mini maxa jak wychodzi na czysto bez zadnych bic przy idealnej grze to przyjmuje
 - readme
 - przycisk powrotu do menu po zakonczeniu gry
 - losowosc do ruchow identycznych
 - lepsze czcionka w menu
 - zrobic sama plansze stateless
-- moze zaczynac przeciwnik
+- load, save game
+
+
+zrobic gify

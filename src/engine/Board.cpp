@@ -42,6 +42,29 @@ Board::Board(bool is_player1_on_move) {
     this->_reset_board(is_player1_on_move);
 }
 
+Board::Board(const Board &board) {
+    ///// _board_table
+    for(int i = 0; i<8; i++){
+        for(int j = 0; j<8; j++){
+            _board_table[i][j] = board._board_table[i][j];
+        }
+    }
+    ///// _moves_history - nie trzeba kopiowac
+//    _moves_history = board._moves_history;
+    ///// _is_player1_on_move
+    _is_player1_on_move = board._is_player1_on_move;
+
+    _pawns_cnt[0] = board._pawns_cnt[0];
+    _pawns_cnt[1] = board._pawns_cnt[1];
+    _queens_cnt[0] = board._queens_cnt[0];
+    _queens_cnt[1] = board._queens_cnt[1];
+
+    _capture_number = board._capture_number;
+
+    _last_capture_piece_pos = board._last_capture_piece_pos;
+}
+
+
 void Board::_reset_board(bool is_player1_on_move) {
     _queens_cnt[0] = _queens_cnt[1] = 0;
     _pawns_cnt[0] = _pawns_cnt[1] = 12;

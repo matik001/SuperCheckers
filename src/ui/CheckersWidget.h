@@ -10,6 +10,7 @@
 #include "UserUIAgent.h"
 #include "ResourcesManager.h"
 #include "MoveAnimation.h"
+#include "../utils/Dispatcher.h"
 
 #define FIELDS_IN_ROW  8
 #define FIELDS_IN_COLUMN  8
@@ -35,6 +36,9 @@ class CheckersWidget : public sf::Drawable{
     bool _are_we_white; /// jest to tylko informacja jakiego koloru rysowac nasze pionki, my zawsze jestesmy graczem 2 z _game
     bool _is_move_animation_now() const;
     std::shared_ptr<MoveAnimation> _move_animation;
+    Dispatcher _dispatcher;
+    std::shared_ptr<std::thread> _thinking_thread = nullptr;
+    bool _is_thinking() const;
 
     std::optional<sf::Vector2u> _map_pos_to_field(sf::Vector2f pos)  const;
     sf::Vector2f _map_field_to_pos(sf::Vector2u pos) const;
@@ -48,7 +52,7 @@ class CheckersWidget : public sf::Drawable{
     Resource _board_field_to_texture_id(BoardField field) const;
     void _draw_board(sf::RenderTarget &target, sf::RenderStates states) const;
     void _draw_pieces(sf::RenderTarget &target, sf::RenderStates states) const;
-    void _play_next_move(const std::function<void()>& callback);
+    void _play_next_move(const std::function<void()>& move);
     void _play_enemy_moves();
     void _play_user_move(const Move& move);
 public:
@@ -56,6 +60,7 @@ public:
     void handle_event(const sf::Event &event);
     void update();
     BoardStatus get_status() const;
+
     bool is_finished() const; /// true jezeli gra sie skonczyla i zakonczyly sie animacje
 
 protected:

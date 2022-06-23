@@ -44,6 +44,7 @@ class Board {
     void _reset_board(bool is_player1_on_move); /// ustawia board do początkowej pozycji
 public:
     Board(bool is_player1_on_move = false);
+    Board(const Board &board); /// klonowanie
     [[nodiscard]] DynamicArray<Move> get_all_possible_moves() const; /// zwraca wszystkie mozliwe ruchy gracza aktualnie na ruchu, wliczajac bicia
     void play_move(Move move); /// jezeli chcemy wykonac np. podwojne bicie to wykonujemy te funkcje 2 razy, kolor sie wtedy nie zmienia
     void revert_move(); /// cofa ostatnio zagrany ruch

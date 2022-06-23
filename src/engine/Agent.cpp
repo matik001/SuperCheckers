@@ -7,6 +7,12 @@ void Agent::init(Board *board, bool color) {
     this->color = color;
 }
 
+
+void Agent::change_board(Board *board) {
+    this->board = board;
+}
+
+
 void MinMaxAgent::init(Board *board, bool color) {
     Agent::init(board, color);
 }
@@ -75,6 +81,13 @@ int MinMaxAgent::_evaluate_board(const DynamicArray<Move> &possible_moves) {
            - (board->get_amount_of_queens(false) * 3 + board->get_amount_of_pawns(false));
 }
 
+std::shared_ptr<Agent> MinMaxAgent::clone() {
+    auto res = std::make_shared<MinMaxAgent>(_max_depth);
+    res->color = this->color;
+    res->board = this->board;
+    return std::move(res);
+}
+
 void UserConsoleAgent::init(Board *board, bool color) {
     Agent::init(board, color);
 }
@@ -108,6 +121,13 @@ Move UserConsoleAgent::_pick_move(DynamicArray<Move> &moves) {
         }
         return moves[move_id];
     }
+}
+
+std::shared_ptr<Agent> UserConsoleAgent::clone() {
+    auto res = std::make_shared<UserConsoleAgent>();
+    res->color = this->color;
+    res->board = this->board;
+    return std::move(res);
 }
 
 

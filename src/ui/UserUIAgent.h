@@ -10,6 +10,8 @@ public:
     void set_move(Move move);
     Move get_move() override;
     void init(Board *board, bool color) override;
+
+    std::shared_ptr<Agent> clone() override;
 };
 
 

@@ -4,14 +4,17 @@
 
 
 #include "Board.h"
+#include <memory>
 
 class Agent {
 protected:
     bool color; /// true oznacza ze jestesmy player1
     Board *board;
 public:
+    virtual void change_board(Board *board);
     virtual void init(Board *board, bool color);
     virtual Move get_move() = 0; /// wybiera ruch ktory chce zagrac
+    virtual std::shared_ptr<Agent> clone() = 0;
 };
 struct MinMaxRes{
     int eval;
@@ -29,6 +32,8 @@ public:
     MinMaxAgent(int max_depth);
     Move get_move() override;
     void init(Board *board, bool color) override;
+
+    std::shared_ptr<Agent> clone() override;
 };
 
 class UserConsoleAgent : public Agent{
@@ -37,6 +42,8 @@ class UserConsoleAgent : public Agent{
 public:
     Move get_move() override;
     void init(Board *board, bool color) override;
+
+    std::shared_ptr<Agent> clone() override;
 };
 
 

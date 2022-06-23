@@ -4,6 +4,12 @@
 #include "ui/ResourcesManager.h"
 #include "utils/SfmlUtils.h"
 
+#include <iostream>
+#include <thread>
+
+
+
+
 int main() {
     ResourcesManager::singleton().load_all();
     GameWindow window;

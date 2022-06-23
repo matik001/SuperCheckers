@@ -15,6 +15,8 @@ CheckersWidget::CheckersWidget(sf::Vector2<float> size, int computer_level
     _game = std::make_shared<Game>(_computer_agent.get(), _user_agent.get(), !are_we_white);
     _update_field_sprites();
     _update_pieces_sprites();
+    if(!are_we_white)
+        _play_enemy_moves();
 }
 
 
@@ -41,9 +43,6 @@ Resource CheckersWidget::_board_field_to_texture_id(BoardField field) const{
             return pawn1;
         case BoardField::PAWN2:
             return pawn2;
-        case NOTHING:
-            std::cout << "_board_field_to_texture_id - field can't be NOTHING";
-            exit(1);
     }
 }
 
@@ -150,28 +149,31 @@ void CheckersWidget::_draw_pieces(sf::RenderTarget &target, sf::RenderStates sta
     }
 }
 void CheckersWidget::_play_next_move(const std::function<void()>& callback) {
-    _game->play_next_move(); /// problem ze po zagraniu ruchu od razu sie zmienia gracz na ruchu, ale w sumie to _is_move_animation_now ratuje
-    auto played_move = _game->board.get_last_move();
 
-    auto from = _map_field_to_pos(sf::Vector2u(played_move.from.x, played_move.from.y));
-    auto to = _map_field_to_pos(sf::Vector2u(played_move.to.x, played_move.to.y));
-    auto piece = _find_piece(sf::Vector2u(played_move.from.x, played_move.from.y));
-    piece->pos = sf::Vector2u(played_move.to.x, played_move.to.y);
+    _game->find_next_move_async([this, callback](const Move& move){
+        _dispatcher.execute([this, move, callback](){
+            _game->play_move(move);
+            auto from = _map_field_to_pos(sf::Vector2u(move.from.x, move.from.y));
+            auto to = _map_field_to_pos(sf::Vector2u(move.to.x, move.to.y));
+            auto piece = _find_piece(sf::Vector2u(move.from.x, move.from.y));
+            piece->pos = sf::Vector2u(move.to.x, move.to.y);
 
-    auto animation = std::make_shared<MoveAnimation>(
-                from,
-                to,
-              UIConfig::move_animation_time,
-              &piece->sprite);
-    _move_animation = animation; /// musi byc w ten sposob, bo inaczej wykona sie destruktor, przy kolejnej animacji, w callbacku obecnej
+            auto animation = std::make_shared<MoveAnimation>(
+                    from,
+                    to,
+                    UIConfig::move_animation_time,
+                    &piece->sprite);
+            _move_animation = animation; /// musi byc w ten sposob, bo inaczej wykona sie destruktor, przy kolejnej animacji, w callbacku obecnej
 
-    _selected_field = std::nullopt;
-    _update_possible_moves();
-    animation->start([this, callback, animation]{ /// trzeba wrzucic animation, z powyzszego powodu
-        _update_field_sprites();
-        _update_pieces_sprites();
-        _update_cursor();
-        callback();
+            _selected_field = std::nullopt;
+            _update_possible_moves();
+            animation->start([this, callback, animation]{ /// trzeba wrzucic animation, z powyzszego powodu
+                _update_field_sprites();
+                _update_pieces_sprites();
+                _update_cursor();
+                callback();
+            });
+        });
     });
 }
 
@@ -265,6 +267,7 @@ BoardStatus CheckersWidget::get_status() const {
 }
 
 void CheckersWidget::update() {
+    _dispatcher.update();
     if(_move_animation)
         _move_animation->update();
 }
@@ -277,8 +280,9 @@ std::shared_ptr<Piece> CheckersWidget::_find_piece(sf::Vector2u pos) const {
     auto res = std::find_if(_pieces.begin(), _pieces.end(),[pos](const std::shared_ptr<Piece> &p){
         return p->pos == pos;
     });
-    if(res == _pieces.end())
+    if(res == _pieces.end()){
         return nullptr;
+    }
     return *res;
 }
 
@@ -291,7 +295,11 @@ std::shared_ptr<Piece> CheckersWidget::_find_piece_or_create(sf::Vector2u pos)  
 }
 
 bool CheckersWidget::is_finished() const {
-    return _game->is_finished() && !_is_move_animation_now();
+    return _game->is_finished() && !_is_move_animation_now() && !_is_thinking();
+}
+
+bool CheckersWidget::_is_thinking() const {
+    _thinking_thread != nullptr && _thinking_thread->joinable();
 }
 
 
