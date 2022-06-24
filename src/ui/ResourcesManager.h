@@ -11,6 +11,7 @@ enum Resource{
     ///////////////////// IMAGES
     BLACK_PAWN, WHITE_PAWN,
     BLACK_QUEEN, WHITE_QUEEN,
+//    ICON,
 
     ///////////////////// FONTS
     COURGETTE_FONT,

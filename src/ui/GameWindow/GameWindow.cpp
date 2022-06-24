@@ -15,6 +15,9 @@ void GameWindow::show(){
     _window->create(sf::VideoMode(700, 600), "SuperCheckers by Mateusz Kisiel",
                     sf::Style::Titlebar | sf::Style::Close, sf::ContextSettings(0,0, 16));
     _window->setFramerateLimit(60);
+
+    auto icon = ((sf::Texture *)ResourcesManager::singleton().get(Resource::BLACK_QUEEN).get())->copyToImage();
+    _window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     _gui.setWindow(*_window);
 
     change_state(std::make_shared<MenuWindowState>());

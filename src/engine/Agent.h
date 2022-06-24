@@ -19,7 +19,10 @@ public:
 struct MinMaxRes{
     int eval;
     int best_move_id;
+    MinMaxRes();
     MinMaxRes(int eval, int best_move_id);
+    MinMaxRes(const MinMaxRes &obj);
+    MinMaxRes& operator=(const MinMaxRes &obj);
 };
 
 const int INF = 1e9;

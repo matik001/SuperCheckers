@@ -13,6 +13,8 @@ class DynamicArray {
 public:
     DynamicArray();
     DynamicArray(const DynamicArray<T> &copy);
+    void operator=(const DynamicArray<T> &arr);
+
     void push(T elem);
     void push_many(const DynamicArray<T> &arr);
     T& operator[](int idx) const;

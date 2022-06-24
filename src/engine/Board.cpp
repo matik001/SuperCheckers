@@ -50,7 +50,7 @@ Board::Board(const Board &board) {
         }
     }
     ///// _moves_history - nie trzeba kopiowac
-//    _moves_history = board._moves_history;
+    _moves_history = board._moves_history;
     ///// _is_player1_on_move
     _is_player1_on_move = board._is_player1_on_move;
 
@@ -64,6 +64,9 @@ Board::Board(const Board &board) {
     _last_capture_piece_pos = board._last_capture_piece_pos;
 }
 
+void Board::_count_pieces() {
+
+}
 
 void Board::_reset_board(bool is_player1_on_move) {
     _queens_cnt[0] = _queens_cnt[1] = 0;
@@ -369,5 +372,8 @@ Move Board::get_last_move() {
     return _moves_history[_moves_history.size()-1];
 }
 
+int Board::get_moves_amount() const {
+    return _moves_history.size();
+}
 
 

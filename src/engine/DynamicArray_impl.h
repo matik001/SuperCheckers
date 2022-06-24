@@ -36,12 +36,23 @@ DynamicArray<T>::DynamicArray() {
     t = new T[length];
 }
 template<typename T>
-DynamicArray<T>::DynamicArray(const DynamicArray<T>& toCopy) {
-    length = toCopy.length;
-    amountOfElements = toCopy.amountOfElements;
+void DynamicArray<T>::operator=(const DynamicArray<T> &arr) {
+    if(t != nullptr){
+        delete[] t;
+        t = nullptr;
+    }
+    length = arr.length;
+    amountOfElements = arr.amountOfElements;
     t = new T[length];
-    toCopy.copy(t);
+    arr.copy(t);
 }
+template<typename T>
+DynamicArray<T>::DynamicArray(const DynamicArray<T>& toCopy) {
+    *this = toCopy;
+}
+
+
+
 
 template <typename T>
 void DynamicArray<T>::push(T elem) {
@@ -114,5 +125,7 @@ void DynamicArray<T>::push_many(const DynamicArray<T> &arr) {
         push(arr[i]);
     }
 }
+
+
 
 

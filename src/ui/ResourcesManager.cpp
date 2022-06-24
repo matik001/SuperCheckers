@@ -26,6 +26,7 @@ void ResourcesManager::load_all() {
     load_texture_from_memory(Resource::BLACK_PAWN, BLACK_PAWN_PNG, BLACK_PAWN_PNG_SIZE);
     load_texture_from_memory(Resource::WHITE_QUEEN, WHITE_QUEEN_PNG, WHITE_QUEEN_PNG_SIZE);
     load_texture_from_memory(Resource::BLACK_QUEEN, BLACK_QUEEN_PNG, BLACK_QUEEN_PNG_SIZE);
+//    load_texture_from_memory(Resource::ICON, ICON_ICO, ICON_ICO_SIZE);
 
     ///////////////////// FONTS
     load_font_from_memory(Resource::COURGETTE_FONT, COURGETTE_REGULAR_TTF, COURGETTE_REGULAR_TTF_SIZE);

@@ -41,6 +41,7 @@ class Board {
     DynamicArray<Move> _get_moves(Position from) const; /// zwrca możliwe ruchy z danej pozycji
     DynamicArray<Move> _get_beats(Position from) const; /// zwrca możliwe zbicia z danej pozycji
 
+    void _count_pieces();
     void _reset_board(bool is_player1_on_move); /// ustawia board do początkowej pozycji
 public:
     Board(bool is_player1_on_move = false);
@@ -49,6 +50,7 @@ public:
     void play_move(Move move); /// jezeli chcemy wykonac np. podwojne bicie to wykonujemy te funkcje 2 razy, kolor sie wtedy nie zmienia
     void revert_move(); /// cofa ostatnio zagrany ruch
     void print() const; /// rysuje plansze
+    int get_moves_amount() const;
     [[nodiscard]] bool get_player_on_move() const; /// zwracza czy gracz 1 jest na ruchu
     [[nodiscard]] int get_amount_of_pieces(bool player) const; /// zwraca ilosc bierek danego gracza  (pieces = pawns + queens)
     [[nodiscard]] int get_amount_of_pawns(bool player) const; /// zwraca pionkow
