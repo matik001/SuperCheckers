@@ -32,6 +32,7 @@ class CheckersWidget : public sf::Drawable{
     std::shared_ptr<sf::RenderWindow> _window;
     std::optional<sf::Vector2u> _hovered_field = std::nullopt;
     std::optional<sf::Vector2u> _selected_field = std::nullopt;
+    std::vector<Move> _all_beats; /// wszystkie mozliwe bicia naszymi figurami
     std::vector<Move> _possible_moves; /// mozliwe ruchy obecnie wybranej figury
     bool _are_we_white; /// jest to tylko informacja jakiego koloru rysowac nasze pionki, my zawsze jestesmy graczem 2 z _game
     bool _is_move_animation_now() const;
@@ -47,8 +48,10 @@ class CheckersWidget : public sf::Drawable{
 
     void _update_cursor();
     void _update_possible_moves();
+    void _update_beats();
     void _update_field_sprites();
     void _update_pieces_sprites();
+
     Resource _board_field_to_texture_id(BoardField field) const;
     void _draw_board(sf::RenderTarget &target, sf::RenderStates states) const;
     void _draw_pieces(sf::RenderTarget &target, sf::RenderStates states) const;

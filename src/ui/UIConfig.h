@@ -11,6 +11,7 @@ public:
     static const sf::Color hover_piece_color;
     static const sf::Color selected_piece_color;
     static const sf::Color possible_move_color;
+    static const sf::Color must_beat_color;
 
     static const sf::Time move_animation_time;
     static const sf::Time background_dim_time;

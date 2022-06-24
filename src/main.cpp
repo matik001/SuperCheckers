@@ -8,8 +8,6 @@
 #include <thread>
 
 
-
-
 int main() {
     srand(time(0));
     ResourcesManager::singleton().load_all();

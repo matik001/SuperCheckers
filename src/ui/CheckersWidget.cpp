@@ -74,6 +74,7 @@ void CheckersWidget::_update_pieces_sprites() {
     }
 }
 
+
 void CheckersWidget::_update_field_sprites() {
     for(int i = 0; i<FIELDS_IN_ROW; i++){
         for(int j = 0; j<FIELDS_IN_COLUMN; j++){
@@ -93,6 +94,9 @@ void CheckersWidget::_update_field_sprites() {
             BoardField field = _game->board.get_field(_hovered_field->x, _hovered_field->y);
             if(field != NOTHING && _game->board.get_player_on_move() == get_board_field_color(field))
                 _field_sprites[_hovered_field->x][_hovered_field->y].setFillColor(UIConfig::hover_piece_color);
+        }
+        for (auto move: _all_beats) {
+            _field_sprites[move.from.x][move.from.y].setFillColor(UIConfig::must_beat_color);
         }
         if(_selected_field != std::nullopt){
             _field_sprites[_selected_field->x][_selected_field->y].setFillColor(UIConfig::selected_piece_color);
@@ -119,6 +123,20 @@ void CheckersWidget::_update_cursor() {
     }
     _window->setMouseCursor(cursor);
 }
+
+
+void CheckersWidget::_update_beats() {
+    if(!_game->board.get_player_on_move()){
+        _all_beats.clear();
+        auto moves = _game->board.get_all_possible_moves();
+        if(moves.size() > 0 && moves[0].is_beating){
+            for(auto move : moves)
+                _all_beats.push_back(move);
+        }
+    }
+
+}
+
 
 void CheckersWidget::_update_possible_moves() {
     _possible_moves.clear();
@@ -168,10 +186,11 @@ void CheckersWidget::_play_next_move(const std::function<void()>& callback) {
             _selected_field = std::nullopt;
             _update_possible_moves();
             animation->start([this, callback, animation]{ /// trzeba wrzucic animation, z powyzszego powodu
+                _update_beats();
                 _update_field_sprites();
                 _update_pieces_sprites();
                 _update_cursor();
-                callback();
+                    callback();
             });
         });
     });
@@ -183,6 +202,7 @@ void CheckersWidget::_play_user_move(const Move& move) {
         if(!_game->board.get_player_on_move() && _game->get_state() == IN_PROGRESS){
             _selected_field = sf::Vector2u(move.to.x, move.to.y);
             _update_possible_moves();
+            _update_beats();
             _update_field_sprites();
             _update_pieces_sprites();
             _update_cursor();
@@ -301,6 +321,7 @@ bool CheckersWidget::is_finished() const {
 bool CheckersWidget::_is_thinking() const {
     _thinking_thread != nullptr && _thinking_thread->joinable();
 }
+
 
 
 
