@@ -56,11 +56,13 @@ MinMaxRes MinMaxAgent::_minmax(int depth, int alpha, int beta) {
 
     bool player1 = board->get_player_on_move();
 
-    DynamicArray<MinMaxRes> *best_moves = nullptr;
-    { // chcemy wylosowac jeden z najlepszych ruchow, by nie grac zawsze tego samego
-        /// mozna wszystkie takie bloki zakomentowac te z bedzie dzialac
-        best_moves = new DynamicArray<MinMaxRes>();
-    }
+    /// co ciekawe gdy ruchy nie sa losowne to ai wydaje sie grac troszke lepiej,
+    /// byc moze wybieranie ruchow faworyzujacych granie po jednej stronie jest dobra heurystyka
+//    DynamicArray<MinMaxRes> *best_moves = nullptr;
+//    { /// chcemy wylosowac jeden z najlepszych ruchow, by nie grac zawsze tego samego, w tej samej pozycji
+//        ////// mozna wszystkie takie bloki zakomentowac to tez bedzie dzialac
+//        best_moves = new DynamicArray<MinMaxRes>();
+//    }
     MinMaxRes best(-1, -1);
     for (int i = 0; i<moves.size() && alpha < beta; i++) {
         const Move &move = moves[i];
@@ -71,19 +73,19 @@ MinMaxRes MinMaxAgent::_minmax(int depth, int alpha, int beta) {
             best.best_move_id = i;
             best.eval = resi.eval;
         }
-        {  //// mozna zakomentowac
-            if(resi.eval == best.eval){
-                best_moves->push(best);
-            }
-        }
+//        {  //// mozna zakomentowac
+//            if(resi.eval == best.eval){
+//                best_moves->push(best);
+//            }
+//        }
         if (player1) {  /// player1 chce zmaksymalizowac eval
             if(resi.eval > best.eval){
                 best.eval = resi.eval;
                 best.best_move_id = i;
-                {//// mozna zakomentowac
-                    best_moves->clear();
-                    best_moves->push(best);
-                }
+//                {//// mozna zakomentowac
+//                    best_moves->clear();
+//                    best_moves->push(best);
+//                }
             }
             alpha = std::max(alpha, resi.eval);
         }
@@ -91,19 +93,19 @@ MinMaxRes MinMaxAgent::_minmax(int depth, int alpha, int beta) {
             if(resi.eval < best.eval){
                 best.eval = resi.eval;
                 best.best_move_id = i;
-                {//// mozna zakomentowac
-                    best_moves->clear();
-                    best_moves->push(best);
-                }
+//                {//// mozna zakomentowac
+//                    best_moves->clear();
+//                    best_moves->push(best);
+//                }
             }
             beta = std::min(beta, resi.eval);
         }
         board->revert_move();
     }
-    {//// mozna zakomentowac
-        best = (*best_moves)[rand()%best_moves->size()];
-        delete best_moves;
-    }
+//    {//// mozna zakomentowac
+//        best = (*best_moves)[rand()%best_moves->size()];
+//        delete best_moves;
+//    }
     return best;
 }
 

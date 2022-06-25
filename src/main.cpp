@@ -10,9 +10,9 @@
 
 int main() {
     srand(time(0));
-    ResourcesManager::singleton().load_all();
+    ResourcesManager::singleton().load_all_sfml();
     GameWindow window;
-    window.show();
+    window.run();
 
 
     /// mozna zmienic Agenta na innego np. z UserConsoleAgent na MinMaxAgent aby grały dwa boty lub odwrotnie aby grali ludzie

@@ -23,7 +23,7 @@ void ResultWindowState::init(GameWindow &window) {
             : L"Gratulacje mistrzu! ;)"
     );
     _result_text.setFillColor(sf::Color::Transparent);
-    _result_text.setFont(*std::static_pointer_cast<sf::Font>(ResourcesManager::singleton().get(Resource::COURGETTE_FONT)));
+    _result_text.setFont(*ResourcesManager::singleton().get<sf::Font>(Resource::COURGETTE_FONT));
     _result_text.setString(info);
     _result_text.setCharacterSize(64);
     auto rect = _result_text.getLocalBounds();

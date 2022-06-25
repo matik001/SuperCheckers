@@ -21,3 +21,36 @@ std::shared_ptr<sf::Texture> get_screenshot(sf::RenderTarget &renderer,
 
     return std::move(texture);
 }
+
+void center_text_origin(sf::Text &text) {
+    auto bounds = text.getLocalBounds();
+    text.setOrigin(bounds.width/2, bounds.height/2);
+}
+
+void center_shape_origin(sf::Shape &shape) {
+    auto bounds = shape.getLocalBounds();
+    shape.setOrigin(bounds.width/2, bounds.height/2);
+}
+
+std::shared_ptr<sf::Texture> multiply_color(sf::Texture &texture, sf::Color color) {
+    sf::Sprite sprite(texture);
+    sprite.setColor(color);
+
+    sf::RenderTexture render;
+    render.create(texture.getSize().x, texture.getSize().y);
+    render.draw(sprite, sf::RenderStates::Default);
+    render.display();
+    return std::move(std::make_shared<sf::Texture>(render.getTexture()));
+}
+
+std::shared_ptr<sf::Texture> add_color(sf::Texture &texture, sf::Color color) {
+    auto img = texture.copyToImage();
+    for(int x = 0; x<img.getSize().x; x++){
+        for(int y = 0; y<img.getSize().y; y++){
+            img.setPixel(x, y, img.getPixel(x, y) + color);
+        }
+    }
+    auto res = std::make_shared<sf::Texture>();
+    res->loadFromImage(img);
+    return std::move(res);
+}

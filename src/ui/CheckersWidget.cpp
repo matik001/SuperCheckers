@@ -4,17 +4,20 @@
 #include "ResourcesManager.h"
 #include "UIConfig.h"
 #include "../utils/SfmlUtils.h"
-CheckersWidget::CheckersWidget(sf::Vector2<float> size, int computer_level
+CheckersWidget::CheckersWidget(int computer_level
                                , bool are_we_white, std::shared_ptr<sf::RenderWindow> window)
         : _are_we_white(are_we_white), _window(std::move(window)) {
-    this->_size = size;
-    _field_size = sf::Vector2f(_size.x / (float)FIELDS_IN_ROW, _size.y / (float)FIELDS_IN_COLUMN);
+    this->_board_size = UIConfig::board_size;
+    this->_board_number_margin = UIConfig::board_number_margin;
+    _field_size = sf::Vector2f(_board_size.x / (float)FIELDS_IN_ROW,
+                               _board_size.y / (float)FIELDS_IN_COLUMN);
 
     _user_agent = std::make_shared<UserUIAgent>();
     _computer_agent = std::make_shared<MinMaxAgent>(computer_level);
     _game = std::make_shared<Game>(_computer_agent.get(), _user_agent.get(), !are_we_white);
     _update_field_sprites();
     _update_pieces_sprites();
+    _init_field_captions();
     if(!are_we_white)
         _play_enemy_moves();
 }
@@ -22,6 +25,7 @@ CheckersWidget::CheckersWidget(sf::Vector2<float> size, int computer_level
 
 void CheckersWidget::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     _draw_board(target, states);
+    _draw_field_captions(target, states);
     _draw_pieces(target, states);
 }
 
@@ -60,12 +64,11 @@ void CheckersWidget::_update_pieces_sprites() {
                 continue;
             auto piece = _find_piece_or_create(sf::Vector2u(i, j));
             sf::Vector2f pos = _map_field_to_pos(piece->pos);
-            std::shared_ptr<void> texture;
 
             Resource resource_id = _board_field_to_texture_id(field);
-            texture = ResourcesManager::singleton().get(resource_id);
+            auto texture = ResourcesManager::singleton().get<sf::Texture>(resource_id);
 
-            piece->sprite.setTexture(*std::static_pointer_cast<sf::Texture>(texture));
+            piece->sprite.setTexture(*texture);
             scale_to_size(piece->sprite, _field_size.x-10, _field_size.y-10);
             piece->sprite.setOrigin(piece->sprite.getTextureRect().width/2.0,
                                     piece->sprite.getTextureRect().height/2.0);
@@ -76,10 +79,11 @@ void CheckersWidget::_update_pieces_sprites() {
 
 
 void CheckersWidget::_update_field_sprites() {
-    for(int i = 0; i<FIELDS_IN_ROW; i++){
-        for(int j = 0; j<FIELDS_IN_COLUMN; j++){
-            sf::Vector2f pos = sf::Vector2f(_field_size.x * i, _field_size.y * j);
+    for(unsigned int i = 0; i<FIELDS_IN_ROW; i++){
+        for(unsigned int j = 0; j<FIELDS_IN_COLUMN; j++){
+            sf::Vector2f pos = _map_field_to_pos({i,j});
             _field_sprites[i][j].setSize(_field_size);
+            _field_sprites[i][j].setOrigin(_field_size/2.0f);
             _field_sprites[i][j].setPosition(pos);
             _field_sprites[i][j].setOutlineThickness(1);
             _field_sprites[i][j].setOutlineColor(sf::Color::Black);
@@ -152,7 +156,16 @@ void CheckersWidget::_update_possible_moves() {
     }
 }
 
-
+void CheckersWidget::_draw_field_captions(sf::RenderTarget &target, sf::RenderStates states) const {
+    for (int i = 0; i < FIELDS_IN_ROW; i++) {
+        target.draw(_captions_left_bg[i]);
+        target.draw(_field_captions_left[i]);
+    }
+    for (int i = 0; i < FIELDS_IN_COLUMN; i++) {
+        target.draw(_captions_bottom_bg[i]);
+        target.draw(_field_captions_bottom[i]);
+    }
+}
 void CheckersWidget::_draw_board(sf::RenderTarget &target, sf::RenderStates states) const {
     for (int i = 0; i < FIELDS_IN_ROW; i++) {
         for (int j = 0; j < FIELDS_IN_COLUMN; j++) {
@@ -241,26 +254,27 @@ void CheckersWidget::handle_event(const sf::Event &event) {
         auto pos = _map_pos_to_field(
                 _window->mapPixelToCoords(
                         sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+        if (pos == std::nullopt)
+            return;
+
         _hovered_field = std::nullopt;
         BoardField field = _game->board.get_field(pos->x, pos->y);
-        if(field != NOTHING && !get_board_field_color(field)){ /// kliknieto na nasza figure
-            if(_selected_field == pos) /// odznaczamy gdy kliknieto na obecnie zaznaczona
+        if (field != NOTHING && !get_board_field_color(field)) { /// kliknieto na nasza figure
+            if (_selected_field == pos) /// odznaczamy gdy kliknieto na obecnie zaznaczona
                 _selected_field = std::nullopt;
             else
                 _selected_field = pos;
-        }
-        else
+        } else
             _selected_field = std::nullopt;
 
 
-
-        if(pos.has_value()){
-            auto considered_move = std::find_if(_possible_moves.begin(), _possible_moves.end(),
-                                                [pos](const Move &move){return move.to.x == pos->x && move.to.y == pos->y;});
-            if(considered_move != _possible_moves.end()){
-                _play_user_move(*considered_move);
-                return;
-            }
+        auto considered_move = std::find_if(_possible_moves.begin(), _possible_moves.end(),
+                                            [pos](const Move &move) {
+                                                return move.to.x == pos->x && move.to.y == pos->y;
+                                            });
+        if (considered_move != _possible_moves.end()) {
+            _play_user_move(*considered_move);
+            return;
         }
 
         _update_possible_moves();
@@ -271,16 +285,24 @@ void CheckersWidget::handle_event(const sf::Event &event) {
 }
 
 std::optional<sf::Vector2u> CheckersWidget::_map_pos_to_field(sf::Vector2f pos) const{
-    sf::Vector2u res = sf::Vector2u(pos.x / _field_size.x, pos.y / _field_size.y) ;
+    sf::Vector2u res = sf::Vector2u((pos.x - _board_number_margin.x) / _field_size.x, pos.y / _field_size.y) ;
     if(res.x < 0 || res.x >= 8 || res.y < 0 || res.y >= 8)
         return std::nullopt;
     return res;
 }
 sf::Vector2f CheckersWidget::_map_field_to_pos(sf::Vector2u pos) const {
-    return {_field_size.x * (pos.x+0.5f), _field_size.y * (pos.y+0.5f)};
+    return {_board_number_margin.x + _field_size.x * (pos.x+0.5f),
+            _field_size.y * (pos.y+0.5f)};
 }
 
-
+sf::Vector2f CheckersWidget::_get_caption_left_pos(int i) const {
+    return {_board_number_margin.x/2,
+            _field_size.y * (i+0.5f)};
+}
+sf::Vector2f CheckersWidget::_get_caption_bottom_pos(int i) const {
+    return {_board_number_margin.x + _field_size.x * (i+0.5f),
+            _board_size.y + _board_number_margin.y/2 };
+}
 
 BoardStatus CheckersWidget::get_status() const {
     return _game->get_state();
@@ -321,6 +343,70 @@ bool CheckersWidget::is_finished() const {
 bool CheckersWidget::_is_thinking() const {
     _thinking_thread != nullptr && _thinking_thread->joinable();
 }
+
+void CheckersWidget::_init_field_captions() {
+    for(int i = 0; i<8; i++){
+        _field_captions_left[i].setString(std::to_string(8-i));
+        _field_captions_bottom[i].setString(std::string(1, (char)('A' + i)));
+        _field_captions_left[i].setCharacterSize(26);
+        _field_captions_bottom[i].setCharacterSize(26);
+        _field_captions_left[i].setFillColor(UIConfig::board_field_caption_color);
+        _field_captions_bottom[i].setFillColor(UIConfig::board_field_caption_color);
+
+        auto font = ResourcesManager::singleton().get<sf::Font>(Resource::UBUNTU_BOLD_FONT).get();
+        _field_captions_left[i].setFont(*font);
+        _field_captions_bottom[i].setFont(*font);
+
+        center_text_origin(_field_captions_left[i]);
+        center_text_origin(_field_captions_bottom[i]);
+
+        _field_captions_left[i].setPosition(_get_caption_left_pos(i) + sf::Vector2f(0, -5));
+        _field_captions_bottom[i].setPosition(_get_caption_bottom_pos(i) + sf::Vector2f(0, -5));
+
+        _captions_left_bg[i].setSize(sf::Vector2f(_board_number_margin.x, _field_size.y));
+        _captions_bottom_bg[i].setSize(sf::Vector2f(_field_size.x, _board_number_margin.y));
+        center_shape_origin(_captions_left_bg[i]);
+        center_shape_origin(_captions_bottom_bg[i]);
+        _captions_left_bg[i].setOutlineThickness(1);
+        _captions_bottom_bg[i].setOutlineThickness(1);
+        _captions_left_bg[i].setOutlineColor(sf::Color::Black);
+        _captions_bottom_bg[i].setOutlineColor(sf::Color::Black);
+        _captions_left_bg[i].setFillColor((i%2 == 0 ? UIConfig::margin_color1 : UIConfig::margin_color2));
+        _captions_bottom_bg[i].setFillColor((i%2 == 1 ? UIConfig::margin_color1 : UIConfig::margin_color2));
+        _captions_left_bg[i].setPosition(_get_caption_left_pos(i));
+        _captions_bottom_bg[i].setPosition(_get_caption_bottom_pos(i));
+
+    }
+}
+
+bool CheckersWidget::can_revert_move() const {
+    return !_is_move_animation_now() && !_is_thinking()
+        && _game->get_state() == IN_PROGRESS && !_game->board.get_player_on_move()
+        && _game->board.get_moves_amount() > 0;
+}
+
+void CheckersWidget::revert_move() { /// chcemy cofnac ruch przeciwnika i nasz
+    if(_game->board.get_player_on_move())
+        return;
+    /// chcemy po serii cofniec byc na ruchu
+    while(_game->board.get_moves_amount() > 0){
+        _game->revert_move();
+        if(!_game->board.get_player_on_move())
+            break;
+    }
+    _selected_field = std::nullopt;
+    _update_beats();
+    _update_cursor();
+    _update_possible_moves();
+    _update_field_sprites();
+    _update_pieces_sprites();
+
+    /// jezeli ruch przeciwnika to niech gra
+    if(_game->board.get_player_on_move())
+        _play_enemy_moves();
+}
+
+
 
 
 

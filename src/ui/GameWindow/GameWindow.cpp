@@ -5,21 +5,24 @@
 #include <memory>
 #include "WindowStates/MenuWindowState.h"
 #include "WindowState.h"
+#include "../../utils/FontResources.h"
 
 GameWindow::GameWindow(){
 }
 
-void GameWindow::show(){
+void GameWindow::run(){
 
     _window = std::make_shared<sf::RenderWindow>();
     _window->create(sf::VideoMode(700, 600), "SuperCheckers by Mateusz Kisiel",
                     sf::Style::Titlebar | sf::Style::Close, sf::ContextSettings(0,0, 16));
     _window->setFramerateLimit(60);
-
-    auto icon = ((sf::Texture *)ResourcesManager::singleton().get(Resource::BLACK_QUEEN).get())->copyToImage();
-    _window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     _gui.setWindow(*_window);
 
+    ResourcesManager::singleton().load_all_tgui();
+
+    auto icon = ResourcesManager::singleton().get<sf::Texture>(Resource::BLACK_QUEEN)->copyToImage();
+    _window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    _gui.setFont(tgui::Font(UBUNTU_REGULAR_TTF, UBUNTU_REGULAR_TTF_SIZE)); /// przecastowanie na tgui tworzy bledy, wiec wczyta znowu
     change_state(std::make_shared<MenuWindowState>());
 
     while (_window->isOpen())
@@ -27,7 +30,6 @@ void GameWindow::show(){
         sf::Event event;
         while (_window->pollEvent(event))
         {
-            _gui.handleEvent(event);
             if (event.type == sf::Event::Closed)
                 _window->close();
 
@@ -36,7 +38,6 @@ void GameWindow::show(){
         _current_state->update();
 
         _current_state->draw();
-        _gui.draw();
         _window->display();
     }
 }

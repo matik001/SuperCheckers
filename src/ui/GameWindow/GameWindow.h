@@ -15,7 +15,7 @@ class GameWindow{
     std::shared_ptr<WindowState> _current_state;
 public:
     GameWindow();
-    void show();
+    void run();
     void change_state(std::shared_ptr<WindowState> new_state);
 
     friend class WindowState;

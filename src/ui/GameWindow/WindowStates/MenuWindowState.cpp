@@ -21,11 +21,11 @@ void MenuWindowState::init(GameWindow &window) {
 
 
 void MenuWindowState::draw() {
-
+    _window->_gui.draw();
 }
 
 void MenuWindowState::handle_event(const sf::Event &event) {
-
+    _window->_gui.handleEvent(event);
 }
 
 void MenuWindowState::update() {

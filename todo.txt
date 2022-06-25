@@ -1,6 +1,3 @@
-- gdy przymus bicia pionek w czerwonym kolorze ?
-- możliwość cofnięcia ruchu
-- numerowanie szachownicy
 - przycisk offer draw?, - pusczeenie mini maxa jak wychodzi na czysto bez zadnych bic przy idealnej grze to przyjmuje
 - readme, zrobic gify
 - przycisk powrotu do menu po zakonczeniu gry
@@ -9,3 +6,6 @@
 - load, save game
     load wezmie plansze z txt, w menu sie wybierze kto jest na ruchu i poziom silnika
 
+- uporzadkowac pliki, resources osobny katalog
+
+przycisk poddania lub menu
