@@ -5,7 +5,7 @@
 #include "UIConfig.h"
 #include "../utils/SfmlUtils.h"
 CheckersWidget::CheckersWidget(int computer_level
-                               , bool are_we_white, std::shared_ptr<sf::RenderWindow> window)
+                               , bool are_we_white, std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<Board> board)
         : _are_we_white(are_we_white), _window(std::move(window)) {
     this->_board_size = UIConfig::board_size;
     this->_board_number_margin = UIConfig::board_number_margin;
@@ -14,7 +14,11 @@ CheckersWidget::CheckersWidget(int computer_level
 
     _user_agent = std::make_shared<UserUIAgent>();
     _computer_agent = std::make_shared<MinMaxAgent>(computer_level);
-    _game = std::make_shared<Game>(_computer_agent.get(), _user_agent.get(), !are_we_white);
+
+    if(board == nullptr)
+        _game = std::make_shared<Game>(_computer_agent.get(), _user_agent.get(), !are_we_white);
+    else
+        _game = std::make_shared<Game>(_computer_agent.get(), _user_agent.get(), *board);
     _update_field_sprites();
     _update_pieces_sprites();
     _init_field_captions();
@@ -404,6 +408,10 @@ void CheckersWidget::revert_move() { /// chcemy cofnac ruch przeciwnika i nasz
     /// jezeli ruch przeciwnika to niech gra
     if(_game->board.get_player_on_move())
         _play_enemy_moves();
+}
+
+void CheckersWidget::save(const std::string &filename) {
+    _game->board.save(filename);
 }
 
 

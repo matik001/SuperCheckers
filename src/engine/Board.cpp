@@ -20,6 +20,21 @@ char board_field_to_char(BoardField boardField) {
     }
     return 0; /// zeby nie bylo warningow
 }
+BoardField char_to_board_field(char c) {
+    switch (c) {
+        case '.':
+            return BoardField::NOTHING;
+        case 'f':
+            return PAWN1;
+        case 'F':
+            return PAWN2;
+        case 'q':
+            return BoardField::QUEEN1;
+        case 'Q':
+            return BoardField::QUEEN2;
+    }
+    return BoardField::NOTHING;
+}
 
 inline bool get_board_field_color(BoardField boardField) {
     return boardField == BoardField::PAWN1 || boardField == BoardField::QUEEN1;
@@ -49,7 +64,7 @@ Board::Board(const Board &board) {
             _board_table[i][j] = board._board_table[i][j];
         }
     }
-    ///// _moves_history - nie trzeba kopiowac
+    ///// _moves_history
     _moves_history = board._moves_history;
     ///// _is_player1_on_move
     _is_player1_on_move = board._is_player1_on_move;
@@ -60,27 +75,34 @@ Board::Board(const Board &board) {
     _queens_cnt[1] = board._queens_cnt[1];
 
     _capture_number = board._capture_number;
-
     _last_capture_piece_pos = board._last_capture_piece_pos;
 }
 
-void Board::_count_pieces() {
 
+void Board::_count_pieces() {
+    _queens_cnt[0] = _queens_cnt[1] = 0;
+    _pawns_cnt[0] = _pawns_cnt[1] = 0;
+    for(int x = 0; x < 8; x++){
+        for(int y = 0; y<8; y++){
+            if(_board_table[x][y] != NOTHING)
+                _change_pieces_cnt(_board_table[x][y], 1);
+        }
+    }
 }
 
-void Board::_reset_board(bool is_player1_on_move) {
-    _queens_cnt[0] = _queens_cnt[1] = 0;
-    _pawns_cnt[0] = _pawns_cnt[1] = 12;
-    _capture_number = 0;
-    _is_player1_on_move = is_player1_on_move;
-    memset(_board_table, BoardField::NOTHING, sizeof(BoardField)*8*8);
 
+
+void Board::_reset_board(bool is_player1_on_move) {
+    memset(_board_table, BoardField::NOTHING, sizeof(BoardField)*8*8);
     for(int i = 0; i<8; i++){
         if(i == 3 || i == 4)
             continue;
         for(int j = (i+1)%2; j<8; j+=2)
             _board_table[j][i] = (i>4 ? BoardField::PAWN2 : BoardField::PAWN1);
     }
+    _count_pieces();
+    _capture_number = 0;
+    _is_player1_on_move = is_player1_on_move;
 }
 
 void Board::print() const {
@@ -376,4 +398,36 @@ int Board::get_moves_amount() const {
     return _moves_history.size();
 }
 
+void Board::save(const std::string &filename) {
+    std::ofstream stream(filename);
+
+    for(int j = 0; j<8; j++){
+        for(int i = (j+1)%2; i<8; i+=2){
+            if(i == 1)
+                stream << " ";
+            stream << board_field_to_char(_board_table[i][j]) << " ";
+        }
+        stream << "\n";
+    }
+    stream.flush();
+    stream.close();
+}
+
+void Board::load(const std::string &filename, bool starting_player1) {
+    memset(_board_table, BoardField::NOTHING, sizeof(BoardField)*8*8);
+    std::ifstream stream(filename);
+    for(int j = 0; j<8; j++){
+        for(int i = (j+1)%2; i<8; i+=2){
+            char c;
+            stream >> c;
+            _board_table[i][j] = char_to_board_field(c);
+        }
+    }
+    stream.close();
+
+    _count_pieces();
+    _capture_number = 0;
+    _moves_history.clear();
+    _is_player1_on_move = starting_player1;
+}
 

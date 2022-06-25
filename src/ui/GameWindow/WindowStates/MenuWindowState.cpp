@@ -1,6 +1,7 @@
 #include "MenuWindowState.h"
 #include "../../../utils/TGUIMenuFormPreprocess.h"
 #include "GameWindowState.h"
+#include "../../UIConfig.h"
 
 void MenuWindowState::init(GameWindow &window) {
     WindowState::init(window);
@@ -51,7 +52,11 @@ void MenuWindowState::_handle_new_game() {
 }
 
 void MenuWindowState::_handle_load_game() {
-
+    int ai_level = (int)_difficulty_slider->getValue();
+    bool are_we_white = _color_checkbox->isChecked();
+    auto board = std::make_shared<Board>(!are_we_white);
+    board->load(UIConfig::save_file, !are_we_white);
+    _window->change_state(std::make_shared<GameWindowState>(are_we_white, ai_level, board));
 }
 
 void MenuWindowState::_handle_changed_difficulty() {

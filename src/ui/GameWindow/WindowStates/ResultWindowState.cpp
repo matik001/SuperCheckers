@@ -92,7 +92,7 @@ void ResultWindowState::_show_menu_btn() {
 
     _window->_gui.add(_menu_label);
 
-    _menu_btn->showWithEffect(tgui::ShowEffectType::SlideFromTop, tgui::Duration(300));
-    _menu_label->showWithEffect(tgui::ShowEffectType::SlideFromTop, tgui::Duration(300));
+    _menu_btn->showWithEffect(tgui::ShowEffectType::SlideFromTop, tgui::Duration(500));
+    _menu_label->showWithEffect(tgui::ShowEffectType::SlideFromTop, tgui::Duration(500));
 
 }

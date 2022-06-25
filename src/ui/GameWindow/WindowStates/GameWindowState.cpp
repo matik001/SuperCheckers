@@ -1,12 +1,13 @@
 #include "GameWindowState.h"
 
 #include <memory>
+#include <utility>
 #include "ResultWindowState.h"
 #include "../../UIConfig.h"
 #include "../../../utils/SfmlUtils.h"
 
-GameWindowState::GameWindowState(bool are_we_white, int aiLevel) : _are_we_white(are_we_white), _ai_level(aiLevel) {
-
+GameWindowState::GameWindowState(bool are_we_white, int aiLevel, std::shared_ptr<Board> board)
+                                    : _are_we_white(are_we_white), _ai_level(aiLevel), _board(std::move(board)) {
 }
 
 
@@ -18,7 +19,8 @@ void GameWindowState::init(GameWindow &window) {
                                                    UIConfig::game_window_size.y)));
     _checkers_widget = std::make_shared<CheckersWidget>(_ai_level,
                                                         _are_we_white,
-                                                        _window->_window);
+                                                        _window->_window,
+                                                        _board);
     _init_revert();
     _init_save();
 }
@@ -39,7 +41,7 @@ void GameWindowState::_init_save() {
                             UIConfig::game_window_size.y - 100);
     _save_btn->setPosition(pos.x, pos.y);
     _save_btn->onClick([this](){
-        _checkers_widget->revert_move();
+        _checkers_widget->save(UIConfig::save_file);
     });
     _window->_gui.add(_save_btn);
 

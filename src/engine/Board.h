@@ -12,6 +12,7 @@ enum BoardField{
     QUEEN2
 };
 char board_field_to_char(BoardField boardField);
+BoardField char_to_board_field(char c);
 bool get_board_field_color(BoardField boardField);
 bool is_board_field_queen(BoardField boardField);
 BoardField create_board_field(bool color, bool is_queen);
@@ -58,6 +59,8 @@ public:
     [[nodiscard]] const BoardField  get_field(int x, int y) const;
     [[nodiscard]] BoardStatus get_state(const DynamicArray<Move> &all_possible_moves) const;
     Move get_last_move(); /// zakladamy ze ten ruch istnieje
+    void load(const std::string &filename, bool starting_player1);
+    void save(const std::string &filename);
 };
 
 

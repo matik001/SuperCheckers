@@ -13,6 +13,7 @@ public:
     Board board;
     Game();
     Game(Agent *agent1, Agent *agent2, bool is_player1_starting);
+    Game(Agent *agent1, Agent *agent2, const Board &board);
     BoardStatus play_next_move(); /// zwraca informacje o stanie gry
     BoardStatus play_move(const Move& move);
     void find_next_move_async(const std::function<void(Move)>& callback);

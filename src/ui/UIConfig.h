@@ -25,6 +25,8 @@ public:
     static const sf::Color margin_color1;
     static const sf::Color margin_color2;
 
+    static const std::string save_file;
+
 };
 
 #endif //CHECKERSAI_CONFIG_H

@@ -19,3 +19,5 @@ const sf::Vector2f UIConfig::board_size = sf::Vector2f(700, 600);
 const sf::Vector2f UIConfig::board_number_margin = sf::Vector2f(50, 50);
 const sf::Color UIConfig::margin_color1 = sf::Color(64,64,64,255);
 const sf::Color UIConfig::margin_color2 = sf::Color(96,96,96,255);
+
+const std::string UIConfig::save_file = "save.txt";

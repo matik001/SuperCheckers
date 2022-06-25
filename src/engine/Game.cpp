@@ -6,6 +6,14 @@ Game::Game(Agent *agent1, Agent *agent2, bool is_player1_starting) : board(is_pl
     agent1->init(&board, true);
     agent2->init(&board, false);
 }
+Game::Game(Agent *agent1, Agent *agent2, const Board &board) {
+    this->agent1 = agent1;
+    this->agent2 = agent2;
+    this->board = board;
+    agent1->init(&this->board, true);
+    agent2->init(&this->board, false);
+}
+
 
 BoardStatus Game::play_next_move() {
     Agent *agent = (board.get_player_on_move() ? agent1 : agent2);
@@ -50,3 +58,4 @@ void Game::find_next_move_async(const std::function<void(Move)>& callback) {
     std::thread t(f, std::move(agent_clone), std::move(board_clone));
     t.detach();
 }
+

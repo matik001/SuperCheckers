@@ -71,7 +71,7 @@ class CheckersWidget : public sf::Drawable{
     void _play_enemy_moves();
     void _play_user_move(const Move& move);
 public:
-    CheckersWidget(int computer_level, bool are_we_white, std::shared_ptr<sf::RenderWindow> window);
+    CheckersWidget(int computer_level, bool are_we_white, std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<Board> board = nullptr);
     void handle_event(const sf::Event &event);
     void update();
     BoardStatus get_status() const;
@@ -79,7 +79,7 @@ public:
     bool is_finished() const; /// true jezeli gra sie skonczyla i zakonczyly sie animacje
     bool can_revert_move() const;
     void revert_move();
-
+    void save(const std::string &filename);
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };
