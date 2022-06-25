@@ -3,10 +3,11 @@
 ### Opis projektu:
 Projekt jest w całości napisany w C++. Korzysta z biblioteki SFML i TGUI (do tworzenia przycisków). 
 
-Napisałem silnik do warcab, agenta MinMax oraz interfejs użytkownika pozwalający wybrać poziom przeciwnika i zagrać z nim partię. Ruchy obliczane są w osobnym wątku, aby nie blokować interfejsu. Posida także takie features'y jak możliwośc cofania ruchów, zapis/wczytanie stanu planszy, animacje, czy podświetlanie pól.
+Napisałem silnik do warcab, agenta MinMax oraz interfejs użytkownika pozwalający wybrać poziom przeciwnika i zagrać z nim partię. Ruchy obliczane są w osobnym wątku, aby nie blokować interfejsu. Posiada także takie features'y jak możliwość cofania ruchów, zapis/wczytanie stanu planszy, animacje, czy podświetlanie pól.
 
-Jednym z moich głównych założeń jakie miał spełnić program był brak zewnętrznych plików - sam plik wykonywalny, oraz wieloplatformowość. Z tego powodu pliki graficzne i czcionki musiły zostać wkompilowane w plik wykonywalny. Napisałem zatem pomocniczy program: ./scripts/BinToC.py który konwertuje pliki z postaci binarnej i tworzy plik .h gdzie zostają umieszone.
-Można u ustawieniach clion wybrać, aby automatycznie wykonywał ten skrypt przed każdą kompilacją.
+Jednym z moich głównych założeń jakie miał spełnić program był brak zewnętrznych plików - sam plik wykonywalny, dodatkowo program powinien być wieloplatformowy. Z tego powodu pliki graficzne i czcionki musiały zostać wkompilowane w plik wykonywalny. Napisałem zatem pomocniczy program: 
+./scripts/BinToC.py który konwertuje pliki z postaci binarnej i generuje plik .h gdzie dane zostają umieszone.
+Można w ustawieniach clion wybrać, aby automatycznie wykonywał ten skrypt przed każdą kompilacją.
 
 ### Nagranie rozgrywki:
 
