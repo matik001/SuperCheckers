@@ -10,7 +10,8 @@ Można u ustawieniach clion wybrać, aby automatycznie wykonywał ten skrypt prz
 
 ### Nagranie rozgrywki:
 
-https://user-images.githubusercontent.com/25119453/175781702-00040108-970c-4853-82ae-08795ab2523c.mp4
+
+https://user-images.githubusercontent.com/25119453/175782187-6e41e6f1-b395-4885-b810-f0a2c0a215e1.mp4
 
 
 ### Jak uruchomić:
