@@ -5,7 +5,7 @@
 #include <memory>
 #include "WindowStates/MenuWindowState.h"
 #include "WindowState.h"
-#include "../../utils/FontResources.h"
+#include "../../resources/FontResources.h"
 
 GameWindow::GameWindow(){
 }

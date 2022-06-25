@@ -1,1 +1,1 @@
-python ./scripts/BinToC.py ./src/utils/TextureResources.h ((dir  -Path ./img/*).fullname)
+python ./scripts/BinToC.py ./src/resources/TextureResources.h ((dir  -Path ./img/*).fullname)

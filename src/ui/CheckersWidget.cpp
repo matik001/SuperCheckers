@@ -1,7 +1,7 @@
 #include "CheckersWidget.h"
 
 #include <utility>
-#include "ResourcesManager.h"
+#include "../resources/ResourcesManager.h"
 #include "UIConfig.h"
 #include "../utils/SfmlUtils.h"
 CheckersWidget::CheckersWidget(int computer_level

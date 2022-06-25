@@ -5,7 +5,7 @@
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <map>
 #include <memory>
-#include "../utils/TextureResources.h"
+#include "TextureResources.h"
 
 enum Resource{
     ///////////////////// IMAGES

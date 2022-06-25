@@ -1,7 +1,7 @@
 #include "ResultWindowState.h"
 
 #include <utility>
-#include "../../ResourcesManager.h"
+#include "../../../resources/ResourcesManager.h"
 #include "../../UIConfig.h"
 #include "MenuWindowState.h"
 

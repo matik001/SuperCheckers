@@ -1,5 +1,5 @@
 #include "ResourcesManager.h"
-#include "../utils/FontResources.h"
+#include "FontResources.h"
 #include "../utils/SfmlUtils.h"
 
 void ResourcesManager::load_texture_from_memory(Resource name, const void *data, size_t size) {

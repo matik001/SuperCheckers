@@ -1,7 +1,6 @@
 - przycisk offer draw?, - pusczeenie mini maxa jak wychodzi na czysto bez zadnych bic przy idealnej grze to przyjmuje
 - readme, zrobic gify
 - zrobic sama plansze stateless
-- uporzadkowac pliki, resources osobny katalog
 - przycisk poddania się
 - wywalic is promoted z move, stworzyc zamiast tego funkcje bool
 - zrobić multiplatformowy dialog file picker

@@ -8,7 +8,7 @@
 #include <utility>
 #include "../engine/Game.h"
 #include "UserUIAgent.h"
-#include "ResourcesManager.h"
+#include "../resources/ResourcesManager.h"
 #include "Animation/MoveAnimation.h"
 #include "../utils/Dispatcher.h"
 

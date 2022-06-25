@@ -3,7 +3,7 @@
 
 #include <string>
 #include <regex>
-#include "SfmlUtils.h"
+#include "../utils/SfmlUtils.h"
 #include "TextureResources.h"
 
 const char *MENU_FORM_SCHEME = "Renderer.1 {\n"

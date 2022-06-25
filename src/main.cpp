@@ -1,12 +1,15 @@
 #include <iostream>
 #include "engine/Game.h"
 #include "ui/GameWindow/GameWindow.h"
-#include "ui/ResourcesManager.h"
+#include "resources/ResourcesManager.h"
 #include "utils/SfmlUtils.h"
 
 #include <iostream>
 #include <thread>
 
+#ifdef _WIN32 /// chcemy ukryc konsole
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#endif
 
 int main() {
     srand(time(0));
