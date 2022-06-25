@@ -13,6 +13,12 @@ class ResultWindowState : public WindowState{
     std::shared_ptr<sf::Sprite> _background_sprite;
     ColorAnimation _background_animation;
     ColorAnimation _text_animation;
+
+
+    tgui::BitmapButton::Ptr _menu_btn = nullptr;
+    tgui::Label::Ptr _menu_label;
+    void _show_menu_btn();
+
 public:
     ResultWindowState(BoardStatus game_result, std::shared_ptr<sf::Texture> background_texture);
 

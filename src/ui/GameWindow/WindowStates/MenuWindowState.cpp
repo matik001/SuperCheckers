@@ -4,6 +4,11 @@
 
 void MenuWindowState::init(GameWindow &window) {
     WindowState::init(window);
+    auto cursor = sf::Cursor();
+    cursor.loadFromSystem(sf::Cursor::Hand);
+    window._window->setMouseCursor(cursor);
+    window._window->setSize(sf::Vector2u(700, 600));
+
     std::stringstream  ss(gen_menu_form());
     window._gui.loadWidgetsFromStream(ss);
     _level_label = window._gui.get<tgui::Label>("level_label");

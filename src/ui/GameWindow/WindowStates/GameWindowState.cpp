@@ -27,8 +27,8 @@ void GameWindowState::_init_save() {
     _save_btn = tgui::BitmapButton::create("");
     _save_btn->setSize({50, 50});
     _save_btn->getRenderer()->setTexture(*ResourcesManager::singleton().get<sf::Texture>(Resource::SAVE));
-    _save_btn->getRenderer()->setTextureHover(*ResourcesManager::singleton().get<sf::Texture>(SAVE));
-    _save_btn->getRenderer()->setTextureDown(*ResourcesManager::singleton().get<sf::Texture>(SAVE));
+    _save_btn->getRenderer()->setTextureHover(*ResourcesManager::singleton().get<sf::Texture>(SAVE_HOVER));
+    _save_btn->getRenderer()->setTextureDown(*ResourcesManager::singleton().get<sf::Texture>(SAVE_DOWN));
     _save_btn->getRenderer()->setBorders(tgui::Borders(0));
     _save_btn->getRenderer()->setBackgroundColor(sf::Color::Transparent);
     _save_btn->getRenderer()->setBackgroundColorHover(sf::Color::Transparent);

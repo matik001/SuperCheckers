@@ -11,7 +11,9 @@ enum Resource{
     ///////////////////// IMAGES
     BLACK_PAWN, WHITE_PAWN,
     BLACK_QUEEN, WHITE_QUEEN,
-    MENU, SAVE,  REVERT, REVERT_HOVER,  REVERT_DOWN,
+    MENU, MENU_HOVER, MENU_DOWN,
+    SAVE, SAVE_HOVER, SAVE_DOWN,
+    REVERT, REVERT_HOVER,  REVERT_DOWN,
 
     ///////////////////// FONTS
     COURGETTE_FONT,
