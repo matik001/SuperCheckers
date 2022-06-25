@@ -10,6 +10,8 @@ Można u ustawieniach clion wybrać, aby automatycznie wykonywał ten skrypt prz
 
 ### Nagranie rozgrywki:
 
+https://user-images.githubusercontent.com/25119453/175781702-00040108-970c-4853-82ae-08795ab2523c.mp4
+
 
 ### Jak uruchomić:
 1) Pobierz SFML w wersji 2.5.1 dla kompilatora GCC 7.3.0 MinGW (SEH) - 64-bit (w przypadku Windowsa). https://www.sfml-dev.org/download/sfml/2.5.1/
