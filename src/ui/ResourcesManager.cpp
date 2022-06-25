@@ -30,18 +30,18 @@ void ResourcesManager::load_all_sfml() {
 
     load_texture_from_memory(Resource::REVERT, REVERT_PNG, REVERT_PNG_SIZE);
     add(REVERT_HOVER, add_color(*get<sf::Texture>(REVERT), sf::Color(255, 255, 255, 0)));
-    add(REVERT_DOWN, add_color(*get<sf::Texture>(REVERT), sf::Color(0, 220, 0, 0)));
+    add(REVERT_DOWN, add_color(*get<sf::Texture>(REVERT), sf::Color(243, 134, 0, 0)));
     add(REVERT, add_color(*get<sf::Texture>(REVERT), sf::Color(210, 210, 210, 0)));
 
     load_texture_from_memory(Resource::MENU, MENU_PNG, MENU_PNG_SIZE);
     add(MENU_HOVER, add_color(*get<sf::Texture>(MENU), sf::Color(255, 255, 255, 0)));
-    add(MENU_DOWN, add_color(*get<sf::Texture>(MENU), sf::Color(0, 220, 0, 0)));
-    add(MENU, add_color(*get<sf::Texture>(MENU), sf::Color(210, 210, 210, 0)));
+    add(MENU_DOWN, add_color(*get<sf::Texture>(MENU), sf::Color(243, 134, 0, 0)));
+    add(MENU, add_color(*get<sf::Texture>(MENU), sf::Color(220, 220, 220, 0)));
 
 
     load_texture_from_memory(Resource::SAVE, SAVE_PNG, SAVE_PNG_SIZE);
-    add(SAVE_HOVER, multiply_color(*get<sf::Texture>(SAVE), sf::Color(200, 200, 200, 255)));
-    add(SAVE_DOWN, multiply_color(*get<sf::Texture>(SAVE), sf::Color(150, 150, 150, 255)));
+    add(SAVE_HOVER, add_color(*get<sf::Texture>(SAVE), sf::Color(30, 30, 30, 0)));
+    add(SAVE_DOWN, subtract_color(*get<sf::Texture>(SAVE), sf::Color(50, 50, 50, 0)));
 
     ///////////////////// FONTS
     load_font_from_memory(Resource::COURGETTE_FONT, COURGETTE_REGULAR_TTF, COURGETTE_REGULAR_TTF_SIZE);

@@ -54,3 +54,14 @@ std::shared_ptr<sf::Texture> add_color(sf::Texture &texture, sf::Color color) {
     res->loadFromImage(img);
     return std::move(res);
 }
+std::shared_ptr<sf::Texture> subtract_color(sf::Texture &texture, sf::Color color) {
+    auto img = texture.copyToImage();
+    for(int x = 0; x<img.getSize().x; x++){
+        for(int y = 0; y<img.getSize().y; y++){
+            img.setPixel(x, y, img.getPixel(x, y) - color);
+        }
+    }
+    auto res = std::make_shared<sf::Texture>();
+    res->loadFromImage(img);
+    return std::move(res);
+}

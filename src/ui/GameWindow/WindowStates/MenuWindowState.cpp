@@ -22,6 +22,14 @@ void MenuWindowState::init(GameWindow &window) {
     _new_game_btn->onClick([this]{ _handle_new_game();});
     _load_game_btn->onClick([this]{ _handle_load_game();});
     _difficulty_slider->onValueChange([this]{_handle_changed_difficulty() ;});
+
+    auto font_bold = ResourcesManager::singleton().get<tgui::Font>(TGUI_UBUNTU_BOLD_FONT);
+    _title_label->getRenderer()->setFont(*font_bold);
+    _level_label->getRenderer()->setFont(*font_bold);
+    _title_label->getRenderer()->setFont(*font_bold);
+    _new_game_btn->getRenderer()->setFont(*font_bold);
+    _load_game_btn->getRenderer()->setFont(*font_bold);
+
 }
 
 

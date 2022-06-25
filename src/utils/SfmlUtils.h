@@ -9,6 +9,7 @@ void center_text_origin(sf::Text &text);
 void center_shape_origin(sf::Shape &shape);
 std::shared_ptr<sf::Texture> multiply_color(sf::Texture &texture, sf::Color color);
 std::shared_ptr<sf::Texture> add_color(sf::Texture &texture, sf::Color color);
+std::shared_ptr<sf::Texture> subtract_color(sf::Texture &texture, sf::Color color);
 std::shared_ptr<sf::Texture> get_screenshot(sf::RenderTarget &renderer,
                                             const std::function<void(sf::RenderTarget &, sf::RenderStates)>& draw);
 #endif //CHECKERSAI_SFMLUTILS_H
