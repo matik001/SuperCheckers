@@ -4,7 +4,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread -lpthread -Wl,--no-a
 
 # sfml
 set(SFML_STATIC_LIBRARIES TRUE)
-set(SFML_DIR "C:/SFML/lib/cmake/SFML")
+set(SFML_DIR "C:/SFML/lib/cmake/SFML")          #[[ZMIEN TO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]]
 find_package(SFML 2.5.1 COMPONENTS graphics window system network audio REQUIRED)
 
 # tgui
@@ -12,7 +12,7 @@ set(TGUI_BACKEND "SFML_GRAPHICS")
 set(CMAKE_BUILD_TYPE "Debug")
 set(TGUI_CXX_STANDARD, "17")
 set(TGUI_STATIC_LIBRARIES TRUE)
-set(TGUI_DIR "C:/TGUI/lib/cmake/TGUI")
+set(TGUI_DIR "C:/TGUI/lib/cmake/TGUI")          #[[ZMIEN TO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]]
 find_package(TGUI 0.10 REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_SOURCE_DIR} "./src/*.cpp")
